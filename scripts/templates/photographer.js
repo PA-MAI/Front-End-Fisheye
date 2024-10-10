@@ -20,7 +20,7 @@ class photographerCardTemplate {
               <a class="card-profil" title="View the profile of ${this._pcard.name}" 
                  href="../photographer.html?name=${this._pcard.name}" role="link">
                   <img class="card-portrait" alt="Profile of ${this._pcard.name}, slogan: ${this._pcard.tagline}."
-                       src="../assets/photographers/${this._pcard.portrait}">
+                       src="./assets/photographers/${this._pcard.portrait}">
                   <h2 class="card-name">${this._pcard.name}</h2>
               </a>
               <div class="card-text" aria-label="origin">
