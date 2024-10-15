@@ -18,7 +18,7 @@ header {
 
 h1 {
     color: #901C1C;
-    margin-right: 100px;
+    
 }
 
 .fisheye-logo {
@@ -97,6 +97,7 @@ main{
   align-self: center;
   
 }
+
 
 @media screen and (max-width: 1217px){
 .photographer_section {
