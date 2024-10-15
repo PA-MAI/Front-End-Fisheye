@@ -4,21 +4,25 @@
 
 .photograph-header {
     background-color: #FAFAFA;
-    height: 300px;
-    margin: 0 100px;
+    height: 313px;
+    margin: 0 30px 0 2%0;
+    width: 100%;
+   
 }
+
 .page__card{
     display: flex;
     flex-direction: row;
-    
     justify-content: space-around;
     align-content: center;
     align-self: center;
     align-items: center;
-    gap:10%;
+    gap:13%;
     width: 100%;
     height: 313px;
-
+    background-color: #FAFAFA;
+    margin: 0 20px 0 20px;
+   
 }
 .page__card--text h1{
     color: #D3573C;
@@ -50,8 +54,9 @@
     background-color: #901C1C;
     border-radius: 5px;
     cursor: pointer;
-    top:50%
+    
 }
+
 .page__card--portrait{
     width: 200px;
     height: 200px;
@@ -63,26 +68,50 @@
   }
 .photographer-media{
     display:grid;
-    gap:10%;
+    gap:30px;
     grid-template-rows: repeat(1, 1fr);
     grid-template-columns: repeat(3, 1fr);
+    width: 100%;
+    height:max-content;
+    justify-content: center;
+    margin-top: 40px;
 
 }
+.media{
+    display:flex;
+    justify-content: center;
+    align-self: center;
+    align-content: center;
+}
 .media-card{
+    display:flex;
+    flex-direction: column;
     width:300px;
     height:400px;
+    justify-content: center;
+    align-self: center;
+    align-content: center;
+  
 }
 .media-card img{
     width:300px;
     height:350px;
     object-fit: cover;
     object-position: center;
-    border-radius: 10px;
+    border-radius: 5px;
+}
+.video-thumbnail {
+    width: 300px; 
+    height: 350px; 
+    cursor: pointer; 
+    object-fit: cover;
+    object-position: center;
+    border-radius: 5px;
 }
 .media-text{
-display: flex;
-flex-direction: row;
-justify-content: space-between;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 
 }
 .modal {
