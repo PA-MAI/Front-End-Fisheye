@@ -35,7 +35,21 @@ class photographerCardTemplate {
       return $wrapper; // Return the wrapper containing the card
   }
 
-
+  handlelikeButton() {
+    const that = this
+    
+    this.$wrapper
+        .querySelector('.media-likes')
+        .addEventListener('click', function() {
+            if (this.classList.contains('liked')) {
+                this.classList.remove('liked')
+                that.WishListSubject.fire('DEC')
+            } else {
+                this.classList.add('liked')
+                that.WishListSubject.fire('INC')
+            }
+        })
+    }
   createPhotographerPage(photographerMedia) {
     // Sélectionne l'élément .photograph-header pour y injecter les informations du photographe
     const photographHeader = document.querySelector('.photograph-header');
@@ -55,10 +69,12 @@ class photographerCardTemplate {
                 <button class="contact_button" onclick="displayModal()">Contactez-moi</button>
             </div>
             <div class="page__card--profil" title="View the profile of ${this._pcard.name}" role="title">
-                <img class="page__card--portrait" alt="Profile of ${this._pcard.name}, slogan: ${this._pcard.tagline}."
+                <img class="page__card--portrait" alt="${this._pcard.name}, son slogan: ${this._pcard.tagline}."
                     src="./assets/photographers/${this._pcard.portrait}">
             </div>
+            
         </article>
+        
     `;
 
     // Injecter le contenu du photographe dans la balise .photograph-header
@@ -81,11 +97,11 @@ class photographerCardTemplate {
             mediaTemplate = `
             <div class="media">
                 <article class="media-card">
-                    <img src="./assets/PhotosVideos/${photographerFirstName}/${media.image}" alt="${media.title}" />
-                    <div class="media-text">
-                        <span>${media.title}</span><span>${media.likes} <i class="fa-solid fa-heart" aria-hidden="true"></i>likes</span>
-                    </div>
+                    <img src="./assets/PhotosVideos/${photographerFirstName}/${media.image}" alt="${media.title}">
                 </article>
+                <div class="media-text">
+                        <span>${media.title}</span><span>${media.likes} <i class="fa-solid fa-heart" aria-hidden="true" aria-label=”likes”></i></span>
+                </div>
             </div>
             `;
         } else if (media.video) {
@@ -99,7 +115,7 @@ class photographerCardTemplate {
                 </video>
                 </a>
                 <div class="media-text">
-                <span>${media.title}</span><span>${media.likes} likes</span>
+                <span class="media-title">${media.title}</span><span ><i class="media-likes" aria-label=”likes”>${media.likes}</i></span>
                 </div>
                 </article>
             </div>
@@ -108,6 +124,22 @@ class photographerCardTemplate {
 
         // Ajouter chaque média dans la section .photographer-media
         mediaWrapper.insertAdjacentHTML('beforeend', mediaTemplate);
+        
     });
+    const photographLike = document.querySelector('.like-result');
+    
+    // Vider l'élément pour éviter toute duplication
+    photographLike.innerHTML = '';
+    let resultlikesTemplate =`
+        <div .result-likes>
+        <span class="nb-likes">xxx</span>
+        <span <i class="fa-solid fa-heart" aria-hidden="true" aria-label=”likes-result”>
+        </div>
+
+    `;
+    mediaWrapper.insertAdjacentHTML('beforeend', resultlikesTemplate);
+    this.handlelikeButton()
 }
+    
+
 }

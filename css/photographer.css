@@ -79,9 +79,11 @@
 }
 .media{
     display:flex;
+    flex-direction: column;
     justify-content: center;
     align-self: center;
     align-content: center;
+    align-items: center;
 }
 .media-card{
     display:flex;
@@ -112,7 +114,12 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    width: 300px;
+    align-content: center;
 
+}
+i.fa-solid .fa-heart::before{
+    cursor: pointer; 
 }
 .modal {
     border-radius: 5px;
