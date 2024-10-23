@@ -49,7 +49,7 @@ class photographerCardTemplate {
                 <p class="page__card--tag">${this._pcard.tagline}</p>
             </div>
             <div>
-                <button class="contact_button" onclick="displayModal()">Contactez-moi</button>
+                <button class="contact_button" role="link" aria-label="Contact Me" onclick="displayModal()">Contactez-moi</button>
             </div>
             <div class="page__card--profil" title="View the profile of ${this._pcard.name}" role="title">
                 <img class="page__card--portrait" alt="${this._pcard.name}, son slogan: ${this._pcard.tagline}."

@@ -11,7 +11,7 @@
   <body>
     <header>
       <a href="./index.html" title="lien vers la page d'accueil"> 
-        <img src="./assets/images/logo.png" role="img" class="fisheye-logo" alt="Logo du site Fisheye">
+        <img src="./assets/images/logo.png" role="link" class="fisheye-logo" alt="Fisheye Home page">
       </a>
     </header>
     <main id="main">
@@ -19,9 +19,12 @@
       <div class="photograph-header">
         <!-- Le profil (photographHeader) du photographe est injecté ici -->
       </div>
+      <div class="tri-text">Trier par
       <select class="filter-select">
+        
         <!-- Le filtre du photographe est injecté ici -->
       </select>
+    </div>
       <div class="photographer-media">
         <!-- Les médias (mediaWrapper) du photographe sont injectés ici -->
     </div>
@@ -30,23 +33,25 @@
 			<div class="modal">
 				<header>
           <h2>Contactez-moi</h2>
-          <img src="assets/icons/close.svg" onclick="closeModal()" />
+          <img src="assets/icons/close.svg" aria-label="close contact windows" onclick="closeModal()" />
         </header>
 				<form>
 					<div>
-						<label>Prénom</label>
-						<input />
+						<label>Prénom</label><input type="firstname" id="firstname" name="firstname" placeholder="votre prénom"/>
+            <label>Nom</label><input type="lastname" id="lastname" name="lastname" placeholder="votre nom"/>
+            <label>Email</label><input type="mail" id="mail" name="mail" placeholder="votre adresse mail"/>
+            <label>Votre message</label><input type="message" id="message" name="message" placeholder="votre message"/>
+            
 					</div>
-          <button class="contact_button">Envoyer</button>
+          <button class="contact_button" role="input" aria-label="Contact Me">Envoyer</button>
 				</form>
 			</div>
 		</div>
     <div class="like-result">
-      
-      </div>
+    </div>
      
   
-      <!-- Apis et templates (photographer.js doit être chargé avant Counter.js) -->
+      <!-- Apis et templates -->
       <script src="./scripts/api/api.js" defer></script>
       <script src="./scripts/templates/photographer.js" defer></script>
       <script src="./scripts/templates/filterform.js" defer></script>

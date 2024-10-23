@@ -1,34 +1,34 @@
 class SorterForm {
-    constructor(Movies) {
-        this.Movies = Movies
+    constructor(media) {
+        this.media= media
 
         this.$wrapper = document.createElement('div')
         this.$sorterFormWrapper = document.querySelector('.sorter-form-wrapper')
-        this.$moviesWrapper = document.querySelector('.movies-wrapper')
+        //this.$moviesWrapper = document.querySelector('.movies-wrapper')
 
         this.ProxyRatingSorter = new ProxyRatingSorter()
     }
 
-    async sorterMovies(sorter) {
-        this.clearMoviesWrapper()
+    async sorterMedia(sorter) {
+        this.clearMediaWrapper()
 
         if (!!sorter) {
             // Vous pourrez supprimer cette ligne
             // const sortedData = await RatingSorterApi.sorter(this.Movies, sorter)
 
-            const sortedData = await this.ProxyRatingSorter.sorter(this.Movies, sorter)
+            const sortedData = await this.ProxyRatingSorter.sorter(this.media, sorter)
 
 
-            const SortedMovies = sortedData.data 
+            const SortedMedia = sortedData.data 
 
-            SortedMovies.forEach(Movie => {
-                const Template = new MovieCard(Movie)
-                this.$moviesWrapper.appendChild(Template.createMovieCard())
+            SortedMedia.forEach(media => {
+                const mediaTemplate = new MediaCard(media)
+                this.$mediaWrapper.appendChild(Template.createMediaCard())
             })
         } else {
             this.Movies.forEach(Movie => {
-                const Template = new MovieCard(Movie)
-                this.$moviesWrapper.appendChild(Template.createMovieCard())
+                const mediaTemplate = new MediaCard(media)
+                this.$mediaWrapper.appendChild(Template.createMediaCard())
             })
         }
     }
@@ -38,12 +38,12 @@ class SorterForm {
             .querySelector('form')
             .addEventListener('change', e => {
                 const sorter = e.target.value
-                this.sorterMovies(sorter)
+                this.sorterMedia(sorter)
             })
     }
 
-    clearMoviesWrapper() {
-        this.$moviesWrapper.innerHTML = ""
+    clearMediaWrapper() {
+        this.$mediaWrapper.innerHTML = ""
     }
 
     render() {
