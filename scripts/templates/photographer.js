@@ -35,29 +35,12 @@ class photographerCardTemplate {
       return $wrapper; // Return the wrapper containing the card
   }
 
-  handlelikeButton() {
-    const that = this
-    
-    this.$wrapper
-        .querySelector('.media-likes')
-        .addEventListener('click', function() {
-            if (this.classList.contains('liked')) {
-                this.classList.remove('liked')
-                that.WishListSubject.fire('DEC')
-            } else {
-                this.classList.add('liked')
-                that.WishListSubject.fire('INC')
-            }
-        })
-    }
-  createPhotographerPage(photographerMedia) {
-    // Sélectionne l'élément .photograph-header pour y injecter les informations du photographe
+
+   createPhotographerPage(photographerMedia) {
     const photographHeader = document.querySelector('.photograph-header');
-    
-    // Vider l'élément pour éviter toute duplication
     photographHeader.innerHTML = '';
 
-    // Template de base pour le photographe
+    // Template pour afficher les informations du photographe
     let pagePhotographerTemplate = `
         <article class="page__card" role="figure" aria-label="card-photographer">
             <div class="page__card--text" aria-label="origin">
@@ -72,25 +55,20 @@ class photographerCardTemplate {
                 <img class="page__card--portrait" alt="${this._pcard.name}, son slogan: ${this._pcard.tagline}."
                     src="./assets/photographers/${this._pcard.portrait}">
             </div>
-            
         </article>
-        
     `;
-
-    // Injecter le contenu du photographe dans la balise .photograph-header
+    
     photographHeader.insertAdjacentHTML('beforeend', pagePhotographerTemplate);
 
-    // Sélectionner l'élément .photographer-media existant dans le HTML
     const mediaWrapper = document.querySelector('.photographer-media');
-    
-    // Vider l'élément pour éviter toute duplication
     mediaWrapper.innerHTML = '';
 
-    // Utilisation du prénom uniquement pour le chemin des fichiers
-    const photographerFirstName = this._pcard.name.split(" ")[0];
-
-    // Ajout des médias au wrapper
-    photographerMedia.forEach(media => {
+    const photographerFirstName = this._pcard.name.split(" ")[0]; // Pour accéder aux médias du photographe
+    let totalLikes = photographerMedia.reduce((sum, media) => sum + media.likes, 0);
+    console.log("Total Likes au chargement : ", totalLikes); // Vérification de la valeur
+    
+    // Affichage des médias
+    photographerMedia.forEach((media) => {
         let mediaTemplate = '';
 
         if (media.image) {
@@ -100,46 +78,91 @@ class photographerCardTemplate {
                     <img src="./assets/PhotosVideos/${photographerFirstName}/${media.image}" alt="${media.title}">
                 </article>
                 <div class="media-text">
-                        <span>${media.title}</span><span>${media.likes} <i class="fa-solid fa-heart" aria-hidden="true" aria-label=”likes”></i></span>
+                    <span class="media-title">${media.title}</span>
+                    <span class="nb-likes">
+                        <span class="likes-count">${media.likes}</span> 
+                        <i class="fa-regular fa-heart wish-btn" aria-hidden="true" data-id="${media.id}"></i>
+                    </span>
                 </div>
-            </div>
-            `;
+            </div>`;
         } else if (media.video) {
             mediaTemplate = `
             <div class="media">
                 <article class="media-card">
-                <a href="./assets/PhotosVideos/${photographerFirstName}/${media.video}" target="_blank" title="Watch ${media.title}">
-                    <video class="video-thumbnail" controls poster="./assets/PhotosVideos/${photographerFirstName}/${media.image}">
-                    <source src="./assets/PhotosVideos/${photographerFirstName}/${media.video}" type="video/mp4">
-                Your browser does not support the video tag.
-                </video>
-                </a>
-                <div class="media-text">
-                <span class="media-title">${media.title}</span><span ><i class="media-likes" aria-label=”likes”>${media.likes}</i></span>
-                </div>
+                    <a href="./assets/PhotosVideos/${photographerFirstName}/${media.video}" target="_blank" title="Watch ${media.title}">
+                        <video class="video-thumbnail" controls>
+                            <source src="./assets/PhotosVideos/${photographerFirstName}/${media.video}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </a>
+                    <div class="media-text">
+                        <span class="media-title">${media.title}</span>
+                        <span class="nb-likes">
+                            <span class="likes-count">${media.likes}</span>
+                            <i class="fa-regular fa-heart wish-btn" aria-hidden="true" data-id="${media.id}"></i>
+                        </span>
+                    </div>
                 </article>
-            </div>
-            `;
+            </div>`;
         }
 
-        // Ajouter chaque média dans la section .photographer-media
+        // Ajoute les likes actuels au total global
+        //totalLikes += media.likes;
+
         mediaWrapper.insertAdjacentHTML('beforeend', mediaTemplate);
-        
     });
+    
+
+    // Mise à jour du total des likes et du prix dans le DOM
     const photographLike = document.querySelector('.like-result');
     
-    // Vider l'élément pour éviter toute duplication
-    photographLike.innerHTML = '';
-    let resultlikesTemplate =`
-        <div .result-likes>
-        <span class="nb-likes">xxx</span>
-        <span <i class="fa-solid fa-heart" aria-hidden="true" aria-label=”likes-result”>
+    photographLike.innerHTML = `
+        <div class="result-likes">
+            <div><span class="wish-count">${totalLikes}</span><span><i class="fa-solid fa-heart heart" aria-hidden="true"></i></span></div>
+            <span><i class="media-likes" aria-label="likes"></i>${this._pcard.price}€/jours</span>
         </div>
-
     `;
-    mediaWrapper.insertAdjacentHTML('beforeend', resultlikesTemplate);
-    this.handlelikeButton()
+        // Pub/Sub pour gérer les likes
+       
+         const wishlistSubject = new WishlistSubject();
+        const wishlistCounter = new WhishListCounter(totalLikes);
+        wishlistSubject.subscribe(wishlistCounter);
+
+    // Gérer les clics sur les icônes de cœur pour incrémenter/décrémenter les likes
+    this.handlelikeButton(photographerMedia, wishlistSubject, wishlistCounter); // Appel à handlelikeButton
+
+    return mediaWrapper;
+}
+
+// Méthode du bouton des like : Incrémentation et décrémentation des likes
+handlelikeButton(photographerMedia, wishlistSubject, wishlistCounter) {
+    document.querySelectorAll('.fa-heart').forEach(icon => {
+        icon.addEventListener('click', (event) => {
+            const mediaId = event.target.getAttribute('data-id');
+            const media = photographerMedia.find(m => m.id == mediaId);
+            const likesElement = event.target.closest('.nb-likes').querySelector('.likes-count');
+
+            // Vérifier si l'icône est déjà "likée"
+            if (event.target.classList.contains('liked')) {
+                event.target.classList.remove('liked');
+                event.target.classList.replace('fa-solid', 'fa-regular');
+                media.likes -= 1; // Décrémenter uniquement media.likes
+                wishlistCounter.update('DEC'); // Mettre à jour le compteur
+            } else {
+                event.target.classList.add('liked');
+                event.target.classList.replace('fa-regular', 'fa-solid');
+                media.likes += 1; // Incrémenter uniquement media.likes
+                wishlistCounter.update('INC'); // Mettre à jour le compteur
+            }
+
+            // Mettre à jour le nombre de likes dans le DOM pour ce média
+            likesElement.textContent = media.likes;
+
+            // Mettre à jour le nombre de likes dans le compteur global
+            wishlistCounter._$wishCount.textContent = wishlistCounter._count;
+            
+        });
+    });
 }
     
-
 }

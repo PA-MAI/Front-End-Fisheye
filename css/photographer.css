@@ -1,6 +1,10 @@
 #contact_modal {
     display: none;
 }
+.root{
+    font-family: "DM Sans", sans-serif;
+}
+
 
 .photograph-header {
     background-color: #FAFAFA;
@@ -33,8 +37,8 @@
 } 
 .page__card--text h2, .media-text{
     color: #901C1C;
-    font-size: 2.5 em;
-    font-weight: 400;
+    font-size: 1.4em;
+    font-weight: 300;
     margin-top: 5px;
 }
 
@@ -84,12 +88,13 @@
     align-self: center;
     align-content: center;
     align-items: center;
+    height:400px;
 }
 .media-card{
     display:flex;
     flex-direction: column;
     width:300px;
-    height:400px;
+    height:380px;
     justify-content: center;
     align-self: center;
     align-content: center;
@@ -116,10 +121,44 @@
     justify-content: space-between;
     width: 300px;
     align-content: center;
+    height: 20px;
+    margin-bottom: 10px;
 
 }
-i.fa-solid .fa-heart::before{
+.nb-likes {
+    font-weight: 500;
+    
+    
+}
+.wish-btn{
+
     cursor: pointer; 
+    color: #901C1C;
+}
+.wish-btn:hover{
+    cursor: pointer; 
+    color: #901C1C;
+    
+}
+.like-result{
+    position: fixed;
+    bottom: 0px;
+    right: 35px;
+    background-color: #DB8876;
+    color: black;
+    height: 45px;
+    width: 370px;
+    z-index: 2;
+    padding: 0 10px;
+    font-weight: 600;
+    border-radius: 5px 5px 0 0;
+    
+}
+.result-likes{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top:15px;
 }
 .modal {
     border-radius: 5px;

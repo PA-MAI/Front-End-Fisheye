@@ -54,6 +54,8 @@ class appPagePhotographer {
         this.pageApi = new ProfilApiPhotographer('./data/photographers.json');
         // Sélection du conteneur pour les photos/médias
         this.$mediaWrapper = document.querySelector('.photographer-media');
+
+        
     }
 
     // Méthode pour récupérer le nom du photographe à partir de l'URL
@@ -85,7 +87,9 @@ class appPagePhotographer {
             console.error('Failed to fetch profiles and media', error);
         }
     }
-}
+   
+ }
+
 
 // Écouter l'événement DOMContentLoaded pour s'assurer que le DOM est prêt
 document.addEventListener("DOMContentLoaded", () => {

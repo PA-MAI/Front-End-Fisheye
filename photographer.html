@@ -19,6 +19,9 @@
       <div class="photograph-header">
         <!-- Le profil (photographHeader) du photographe est injecté ici -->
       </div>
+      <select class="filter-select">
+        <!-- Le filtre du photographe est injecté ici -->
+      </select>
       <div class="photographer-media">
         <!-- Les médias (mediaWrapper) du photographe sont injectés ici -->
     </div>
@@ -39,10 +42,22 @@
 			</div>
 		</div>
     <div class="like-result">
+      
       </div>
-    <script src="./scripts/api/api.js"></script>
-    <script src="./scripts/templates/photographer.js"></script>
-    <script src="./scripts/pages/index.js"></script>
-    <script src="/scripts/utils/contactForm.js"></script>
+     
+  
+      <!-- Apis et templates (photographer.js doit être chargé avant Counter.js) -->
+      <script src="./scripts/api/api.js" defer></script>
+      <script src="./scripts/templates/photographer.js" defer></script>
+      <script src="./scripts/templates/filterform.js" defer></script>
+      <!-- Pub/Sub -->
+       <script src="./scripts/wishlist/Subject.js" defer></script>
+       <script src="./scripts/wishlist/Counter.js" defer></script>
+  
+      <!-- Pages principales -->
+      <script src="./scripts/pages/index.js" defer></script>
+  
+      <!-- Modal contact -->
+      <script src="./scripts/utils/contactForm.js" defer></script>
   </body>
 </html>
