@@ -1,3 +1,5 @@
+
+import lightbox from "../templates/PlayerModal.js"
 class photographerCardTemplate {
   /**
    * Constructor for the photographerCardTemplate class
@@ -75,7 +77,7 @@ class photographerCardTemplate {
             mediaTemplate = `
             <div class="media">
                 <article class="media-card">
-                    <img src="./assets/PhotosVideos/${photographerFirstName}/${media.image}" alt="${media.title}">
+                   <a role="link" onclick="displaylightbox()"><img src="./assets/PhotosVideos/${photographerFirstName}/${media.image}" alt="lien vers la photo ${media.title} de ${this._pcard.name}"></a>
                 </article>
                 <div class="media-text">
                     <span class="media-title">${media.title}</span>

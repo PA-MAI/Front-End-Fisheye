@@ -1,9 +1,19 @@
-const player = `
+
+export function lightbox () {
+    
+    const lightboxWrapper = document.querySelector(".lightbox_modal");
+    lightboxWrapper.innerHTML = '';
+    const lightboxTemplate = `
            <div class="player">
                <iframe
                    height="600"
                    width="800"
-                   src=${this.movie.trailer}
+                   src=${this.media.image}
                ></iframe>
-               <button class="close-btn">Fermer la fenêtre<button>
+               <img src="assets/icons/close.svg" aria-label="close lighbox windows" onclick="closelightbox()"  />
            </div>`
+
+
+           lightboxWrapper .insertAdjacentHTML('beforeend', lightboxTemplate);
+
+        }

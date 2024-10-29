@@ -35,7 +35,7 @@ class WhishListCounter {
         // Mettre à jour uniquement le texte du nombre de likes sans toucher à l'icône
         const likesSpan = this._$wishCount.querySelector('span'); // Sélectionner uniquement le texte à l'intérieur
         if (!likesSpan) {
-            console.error("L'élément <span> pour les likes est introuvable !");
+           // console.error("L'élément <span> pour les likes est introuvable !");
             return;
         }
         likesSpan.textContent = this._count;

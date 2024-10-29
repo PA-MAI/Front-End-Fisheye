@@ -19,7 +19,8 @@
       <div class="photograph-header">
         <!-- Le profil (photographHeader) du photographe est injecté ici -->
       </div>
-      <div class="tri-text">Trier par
+      <div class="filter-section">
+        <span>Trier par</span>
       <select class="filter-select">
         
         <!-- Le filtre du photographe est injecté ici -->
@@ -29,6 +30,8 @@
         <!-- Les médias (mediaWrapper) du photographe sont injectés ici -->
     </div>
     </main>
+    <div id="lightbox_modal">
+    </div>
     <div id="contact_modal">
 			<div class="modal">
 				<header>
@@ -53,6 +56,7 @@
   
       <!-- Apis et templates -->
       <script src="./scripts/api/api.js" defer></script>
+      <script src="./scripts/templates/playermodal.js" type="module" defer></script>
       <script src="./scripts/templates/photographer.js" defer></script>
       <script src="./scripts/templates/filterform.js" defer></script>
       <!-- Pub/Sub -->
@@ -63,6 +67,7 @@
       <script src="./scripts/pages/index.js" defer></script>
   
       <!-- Modal contact -->
+      <script src="./scripts/utils/lightboxForm.js" defer></script>
       <script src="./scripts/utils/contactForm.js" defer></script>
   </body>
 </html>
