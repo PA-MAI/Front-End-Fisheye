@@ -1,5 +1,5 @@
 
-import lightbox from "../templates/PlayerModal.js"
+
 class photographerCardTemplate {
   /**
    * Constructor for the photographerCardTemplate class
@@ -42,7 +42,7 @@ class photographerCardTemplate {
     const photographHeader = document.querySelector('.photograph-header');
     photographHeader.innerHTML = '';
 
-    // Template pour afficher les informations du photographe
+    // Template for display photographers informations
     let pagePhotographerTemplate = `
         <article class="page__card" role="figure" aria-label="card-photographer">
             <div class="page__card--text" aria-label="origin">
@@ -65,19 +65,22 @@ class photographerCardTemplate {
     const mediaWrapper = document.querySelector('.photographer-media');
     mediaWrapper.innerHTML = '';
 
-    const photographerFirstName = this._pcard.name.split(" ")[0]; // Pour accéder aux médias du photographe
+    const photographerFirstName = this._pcard.name.split(" ")[0]; // for get photographer media
+
     let totalLikes = photographerMedia.reduce((sum, media) => sum + media.likes, 0);
-    console.log("Total Likes au chargement : ", totalLikes); // Vérification de la valeur
+    console.log("Total Likes au chargement : ", totalLikes); // console like value
     
     // Affichage des médias
     photographerMedia.forEach((media) => {
         let mediaTemplate = '';
-
+    
         if (media.image) {
             mediaTemplate = `
             <div class="media">
                 <article class="media-card">
-                   <a role="link" onclick="displaylightbox()"><img src="./assets/PhotosVideos/${photographerFirstName}/${media.image}" alt="lien vers la photo ${media.title} de ${this._pcard.name}"></a>
+                    <a href="#" class="lightbox-trigger" role="link" data-media-url="./assets/PhotosVideos/${photographerFirstName}/${media.image}" data-type="image">
+                        <img src="./assets/PhotosVideos/${photographerFirstName}/${media.image}" alt="lien vers la photo ${media.title} de ${this._pcard.name}">
+                    </a>
                 </article>
                 <div class="media-text">
                     <span class="media-title">${media.title}</span>
@@ -91,29 +94,64 @@ class photographerCardTemplate {
             mediaTemplate = `
             <div class="media">
                 <article class="media-card">
-                    <a href="./assets/PhotosVideos/${photographerFirstName}/${media.video}" target="_blank" title="Watch ${media.title}">
-                        <video class="video-thumbnail" controls>
+                    <a href="#" class="lightbox-trigger" role="link" data-media-url="./assets/PhotosVideos/${photographerFirstName}/${media.video}" data-type="video">
+                        <video class="video-thumbnail">
                             <source src="./assets/PhotosVideos/${photographerFirstName}/${media.video}" type="video/mp4">
                             Your browser does not support the video tag.
                         </video>
                     </a>
-                    <div class="media-text">
-                        <span class="media-title">${media.title}</span>
-                        <span class="nb-likes">
-                            <span class="likes-count">${media.likes}</span>
-                            <i class="fa-regular fa-heart wish-btn" aria-hidden="true" data-id="${media.id}"></i>
-                        </span>
-                    </div>
                 </article>
+                <div class="media-text">
+                    <span class="media-title">${media.title}</span>
+                    <span class="nb-likes">
+                        <span class="likes-count">${media.likes}</span>
+                        <i class="fa-regular fa-heart wish-btn" aria-hidden="true" data-id="${media.id}"></i>
+                    </span>
+                </div>
             </div>`;
         }
 
-        // Ajoute les likes actuels au total global
-        //totalLikes += media.likes;
+       mediaWrapper.insertAdjacentHTML('beforeend', mediaTemplate);
+       
+// Ajoute un événement de clic pour ouvrir la lightbox
+const lightboxInstance = new Lightbox();
 
-        mediaWrapper.insertAdjacentHTML('beforeend', mediaTemplate);
+document.querySelectorAll('.lightbox-trigger').forEach(item => {
+    item.addEventListener('click', (event) => {
+        event.preventDefault();
+
+        const mediaUrl = event.target.closest('a').dataset.mediaUrl;
+        const mediaType = event.target.closest('a').dataset.type;
+
+        // Trouver l'objet média correspondant
+        const media = photographerMedia.find(m => 
+            `./assets/PhotosVideos/${photographerFirstName}/${m.image || m.video}` === mediaUrl
+        );
+
+        // Passer l'objet media à displayLightbox
+        lightboxInstance.displayLightbox(mediaUrl, mediaType, media);
+    });
+});
     });
     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     // Mise à jour du total des likes et du prix dans le DOM
     const photographLike = document.querySelector('.like-result');
@@ -126,16 +164,24 @@ class photographerCardTemplate {
     `;
         // Pub/Sub pour gérer les likes
        
-         const wishlistSubject = new WishlistSubject();
+        const wishlistSubject = new WishlistSubject();
         const wishlistCounter = new WhishListCounter(totalLikes);
         wishlistSubject.subscribe(wishlistCounter);
 
     // Gérer les clics sur les icônes de cœur pour incrémenter/décrémenter les likes
     this.handlelikeButton(photographerMedia, wishlistSubject, wishlistCounter); // Appel à handlelikeButton
 
+    document.querySelectorAll('.lightbox-trigger').forEach(item => {
+        item.addEventListener('click', (event) => {
+            event.preventDefault();
+            const mediaUrl = event.target.closest('a').dataset.mediaUrl;
+            const mediaType = event.target.closest('a').dataset.type;
+            lightboxInstance.displayLightbox(mediaUrl, mediaType);
+        });
+    });
+    
     return mediaWrapper;
 }
-
 // Méthode du bouton des like : Incrémentation et décrémentation des likes
 handlelikeButton(photographerMedia, wishlistSubject, wishlistCounter) {
     document.querySelectorAll('.fa-heart').forEach(icon => {

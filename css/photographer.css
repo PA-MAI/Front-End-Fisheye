@@ -102,11 +102,6 @@
 
 .photographer-media{
     display:flex;
-    /*flex-direction: row;
-   /* display:grid;
-    gap:7%;
-    grid-template-rows: repeat(1, 1fr);
-    grid-template-columns: repeat(3, 1fr);*/
     width: 100%;
     height:max-content;
     justify-content: space-between;
@@ -122,7 +117,7 @@
     align-content: center;
     align-items: center;
     height:360px;
-    /*margin: 10px 25px;*/
+    
 }
 .media-card{
     display:flex;
@@ -226,6 +221,7 @@ form {
     width: 100%;
     flex-direction: column;
     align-items: flex-start;
+    
 }
 
 form label {
@@ -248,3 +244,93 @@ form input {
     border-radius: 5px;
 }
 
+#lightbox_modal {
+    display: none; 
+    position:fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 95%;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+.lightbox_modal {
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+    background-color: white;
+    max-width: 1242px;
+    max-height: 900px;
+    height: 80%;
+    block-size: fit-content;
+    align-items:normal;
+    
+    padding: 20px 50px ;
+}
+.player img{
+    margin: 35px 50px;
+    object-fit: cover;
+    max-width:90%;
+    max-height:700px;
+    border-radius: 5px;
+    object-position: center;
+
+}
+.lightbox-close-btn, .fa-sharp{
+    font-size: 3em;
+    color:#901C1C;
+    cursor: pointer;
+}
+.lightbox-close-btn{
+    margin-top:35px;
+}
+.player{
+    display:flex;
+    flex-direction: column;
+    /*width:fit-content;*/
+    max-height: 800px;
+}
+.lightbox-center{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+.lightbox-anchor{
+    width:42px;
+    height: 42px;
+}
+.lightbox-left{
+    display: flex;
+    flex-direction: column;
+    justify-content:space-between;
+    
+}
+.lightbox-right{
+    display: flex;
+    flex-direction: column;
+    justify-content:space-between;
+}
+/*.lightbox-right .fa-chevron-right{
+margin-top: 280px;
+margin-bottom: 250px;
+
+}*/
+@media screen and (max-width: 783px){
+    .photograph-header{
+        height: 513px;
+    }
+    .page__card{
+    flex-direction: column;
+    height: 513px;
+    gap: 3%;
+    
+    }
+    .photographer-media{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+    }
+}
