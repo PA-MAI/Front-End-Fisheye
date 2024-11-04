@@ -96,3 +96,4 @@ document.addEventListener("DOMContentLoaded", () => {
     const appPageInstance = new appPagePhotographer();
     appPageInstance.main();
 });
+

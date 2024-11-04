@@ -31,34 +31,25 @@
     </main>
     <div id="lightbox_modal" class="lightbox">
       <div class="lightbox_modal"></div>
+      <!-- La lightbox est injectée ici -->
     </div>
     <div id="contact_modal">
-			<div class="modal">
-				<header>
-          <h2>Contactez-moi</h2>
-          <img src="assets/icons/close.svg" aria-label="close contact windows" onclick="closeModal()" />
-        </header>
-				<form>
-					<div>
-						<label>Prénom</label><input type="firstname" id="firstname" name="firstname" placeholder="votre prénom"/>
-            <label>Nom</label><input type="lastname" id="lastname" name="lastname" placeholder="votre nom"/>
-            <label>Email</label><input type="mail" id="mail" name="mail" placeholder="votre adresse mail"/>
-            <label>Votre message</label><input type="message" id="message" name="message" placeholder="votre message"/>
-            
-					</div>
-          <button class="contact_button" role="input" aria-label="Contact Me">Envoyer</button>
-				</form>
-			</div>
+			<!-- La modale de contact est injectée ici -->
 		</div>
     <div class="like-result">
+      <!-- L'encart du nombre de like et du prix est injecté ici -->
     </div>
      
-
+<!-- Modal contact -->
+<script src="./scripts/utils/validForm.js." defer></script>
+<script src="./scripts/utils/errorfunctions.js." defer></script>
+<script src="./scripts/utils/contactForm.js" defer></script>
       <!-- Apis and templates -->
       <script src="./scripts/api/api.js" defer></script>
       <script src="./scripts/templates/lightboxClass.js" defer></script>
       <script src="./scripts/templates/photographer.js" defer></script>
       <script src="./scripts/templates/filterform.js" defer></script>
+      <!--<script src="./scripts/utils/contactForm.js" defer></script>-->
       <!-- Pub/Sub -->
        <script src="./scripts/wishlist/Subject.js" defer></script>
        <script src="./scripts/wishlist/Counter.js" defer></script>
@@ -66,8 +57,9 @@
       <!-- First page-->
       <script src="./scripts/pages/index.js" defer></script>
   
-        <!-- Modal contact -->
-   
-   <script src="./scripts/utils/contactForm.js" defer></script>
+        
+     
+     
+     
   </body>
 </html>

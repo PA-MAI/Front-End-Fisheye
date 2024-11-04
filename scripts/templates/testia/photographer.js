@@ -1,5 +1,3 @@
-
-
 class photographerCardTemplate {
   /**
    * Constructor for the photographerCardTemplate class
@@ -37,15 +35,11 @@ class photographerCardTemplate {
       return $wrapper; // Return the wrapper containing the card
   }
 
-  
   createPhotographerPage(photographerMedia) {
     const photographHeader = document.querySelector('.photograph-header');
     photographHeader.innerHTML = '';
 
-    const lightboxInstance = new Lightbox();
-    const contactModal = new ContactFormModal();  // Instanciation de ContactFormModal
-
-    // Template pour afficher les informations du photographe
+    // Template for display photographers informations
     let pagePhotographerTemplate = `
         <article class="page__card" role="figure" aria-label="card-photographer">
             <div class="page__card--text" aria-label="origin">
@@ -54,7 +48,7 @@ class photographerCardTemplate {
                 <p class="page__card--tag">${this._pcard.tagline}</p>
             </div>
             <div>
-                <button class="contact_button" role="link" aria-label="Contact Me">Contactez-moi</button>
+                <button class="contact_button" role="link" aria-label="Contact Me" onclick="displayModal()">Contactez-moi</button>
             </div>
             <div class="page__card--profil" title="View the profile of ${this._pcard.name}" role="title">
                 <img class="page__card--portrait" alt="${this._pcard.name}, son slogan: ${this._pcard.tagline}."
@@ -65,19 +59,8 @@ class photographerCardTemplate {
     
     photographHeader.insertAdjacentHTML('beforeend', pagePhotographerTemplate);
 
-    // Récupérer le bouton de contact et attacher un écouteur d'événement
-    const contactButton = document.querySelector('.contact_button');
-    contactButton.addEventListener('click', () => {
-        contactModal.openModal(); 
-    });
-
-
-
-
-
     const mediaWrapper = document.querySelector('.photographer-media');
     mediaWrapper.innerHTML = '';
-    
 
     const photographerFirstName = this._pcard.name.split(" ")[0]; // for get photographer media
 
@@ -127,89 +110,36 @@ class photographerCardTemplate {
 
        mediaWrapper.insertAdjacentHTML('beforeend', mediaTemplate);
        
-        // Ajoute un événement de clic pour ouvrir la lightbox
-        document.querySelectorAll('.lightbox-trigger').forEach(item => {
-        item.addEventListener('click', (event) => {
-        event.preventDefault();
+       // Ajoute un événement de clic pour ouvrir la lightbox
+       const lightboxInstance = new Lightbox();
 
-        const mediaUrl = event.target.closest('a').dataset.mediaUrl;
-        const mediaType = event.target.closest('a').dataset.type;
+       document.querySelectorAll('.lightbox-trigger').forEach(item => {
+           item.addEventListener('click', (event) => {
+               event.preventDefault();
 
-        // Trouver l'objet média correspondant
-        const media = photographerMedia.find(m => 
-            `./assets/PhotosVideos/${photographerFirstName}/${m.image || m.video}` === mediaUrl
-        );
+               // Trouver l'URL du média à partir de l'élément cliqué
+               const mediaUrl = event.target.closest('a').dataset.mediaUrl;
+               const mediaType = event.target.closest('a').dataset.type;
 
-        // Passer l'objet media à displayLightbox
-        lightboxInstance.displayLightbox(mediaUrl, mediaType);
+               // Récupérer le chemin d'accès du média
+               const mediaPath = `./assets/PhotosVideos/${photographerFirstName}/${mediaType === 'image' ? media.image : media.video}`;
+
+               // Chercher les données associées au média dans photographerMedia
+               const mediaData = photographerMedia.find(m => 
+                   mediaPath === `./assets/PhotosVideos/${photographerFirstName}/${m.image || m.video}`
+               );
+
+               // Log des données du média pour vérification
+               console.log(mediaData);
+
+               // Ouvrir la lightbox avec le chemin du média et les données associées
+               if (mediaData) {
+                   lightboxInstance.displayLightbox(mediaPath, mediaType, mediaData); // Utilisation de mediaData
+               } else {
+                   console.error("Aucune donnée trouvée pour ce média.");
+               }
+           });
+       });
     });
-    });
-    });
-    
-
-
-
-
-    // Mise à jour du total des likes et du prix dans le DOM
-    const photographLike = document.querySelector('.like-result');
-    
-    photographLike.innerHTML = `
-        <div class="result-likes">
-            <div><span class="wish-count">${totalLikes}</span><span><i class="fa-solid fa-heart heart" aria-hidden="true"></i></span></div>
-            <span><i class="media-likes" aria-label="likes"></i>${this._pcard.price}€/jours</span>
-        </div>
-    `;
-        // Pub/Sub pour gérer les likes
-       
-        const wishlistSubject = new WishlistSubject();
-        const wishlistCounter = new WhishListCounter(totalLikes);
-        wishlistSubject.subscribe(wishlistCounter);
-
-    // Gérer les clics sur les icônes de cœur pour incrémenter/décrémenter les likes
-    this.handlelikeButton(photographerMedia, wishlistSubject, wishlistCounter); // Appel à handlelikeButton
-
-    document.querySelectorAll('.lightbox-trigger').forEach(item => {
-        item.addEventListener('click', (event) => {
-            event.preventDefault();
-            const mediaUrl = event.target.closest('a').dataset.mediaUrl;
-            const mediaType = event.target.closest('a').dataset.type;
-            lightboxInstance.displayLightbox(mediaUrl, mediaType);
-        });
-    });
-    
-    return mediaWrapper;
+  }
 }
-// Méthode du bouton des like : Incrémentation et décrémentation des likes
-handlelikeButton(photographerMedia, wishlistSubject, wishlistCounter) {
-    document.querySelectorAll('.fa-heart').forEach(icon => {
-        icon.addEventListener('click', (event) => {
-            const mediaId = event.target.getAttribute('data-id');
-            const media = photographerMedia.find(m => m.id == mediaId);
-            const likesElement = event.target.closest('.nb-likes').querySelector('.likes-count');
-
-            // Vérifier si l'icône est déjà "likée"
-            if (event.target.classList.contains('liked')) {
-                event.target.classList.remove('liked');
-                event.target.classList.replace('fa-solid', 'fa-regular');
-                media.likes -= 1; // Décrémenter uniquement media.likes
-                wishlistCounter.update('DEC'); // Mettre à jour le compteur
-            } else {
-                event.target.classList.add('liked');
-                event.target.classList.replace('fa-regular', 'fa-solid');
-                media.likes += 1; // Incrémenter uniquement media.likes
-                wishlistCounter.update('INC'); // Mettre à jour le compteur
-            }
-
-            // Mettre à jour le nombre de likes dans le DOM pour ce média
-            likesElement.textContent = media.likes;
-
-            // Mettre à jour le nombre de likes dans le compteur global
-            wishlistCounter._$wishCount.textContent = wishlistCounter._count;
-            
-        });
-    });
-}
-    
-}
-
-

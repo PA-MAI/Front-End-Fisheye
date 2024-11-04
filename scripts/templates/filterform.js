@@ -94,9 +94,12 @@ class FilterForm {
         if (media.image) {
             mediaTemplate = `
             <div class="media">
-                <article class="media-card">
-                    <img src="./assets/PhotosVideos/${photographerFirstName}/${media.image}" alt="${media.title}">
+                    <article class="media-card">
+                    <a href="#" class="lightbox-trigger" role="link" data-media-url="./assets/PhotosVideos/${photographerFirstName}/${media.image}" data-type="image">
+                        <img src="./assets/PhotosVideos/${photographerFirstName}/${media.image}" alt="lien vers la photo ${media.title} de ${media.name}">
+                    </a>
                 </article>
+
                 <div class="media-text">
                     <span class="media-title">${media.title}</span>
                     <span class="nb-likes">
@@ -108,13 +111,14 @@ class FilterForm {
         } else if (media.video) {
             mediaTemplate = `
             <div class="media">
-                <article class="media-card">
-                    <a href="./assets/PhotosVideos/${photographerFirstName}/${media.video}" target="_blank" title="Watch ${media.title}">
-                        <video class="video-thumbnail" controls>
+                 <article class="media-card">
+                    <a href="#" class="lightbox-trigger" role="link" data-media-url="./assets/PhotosVideos/${photographerFirstName}/${media.video}" data-type="video">
+                        <video class="video-thumbnail">
                             <source src="./assets/PhotosVideos/${photographerFirstName}/${media.video}" type="video/mp4">
                             Your browser does not support the video tag.
                         </video>
                     </a>
+                </article>
                     <div class="media-text">
                         <span class="media-title">${media.title}</span>
                         <span class="nb-likes">
