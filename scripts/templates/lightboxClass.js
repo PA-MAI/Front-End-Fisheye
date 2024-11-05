@@ -1,7 +1,7 @@
 class Lightbox {
     constructor(title, date) {
         this.modal = document.getElementById("lightbox_modal");
-        this.pageApi = new ProfilApiPhotographer('./data/photographers.json');
+        this.pageApi = new ProfilApiPhotographer('../data/photographers.json');
         this._title = title;
         this._date = date;
         this.currentIndex = 0; // To keep track of the current media index

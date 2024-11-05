@@ -1,5 +1,4 @@
 
-
 class photographerCardTemplate {
   /**
    * Constructor for the photographerCardTemplate class
@@ -43,7 +42,8 @@ class photographerCardTemplate {
     photographHeader.innerHTML = '';
 
     const lightboxInstance = new Lightbox();
-    const contactModal = new ContactFormModal();  // Instanciation de ContactFormModal
+    const contactModal = new ContactFormModal(this._pcard.name);  // Instanciation de ContactFormModal
+    
 
     // Template pour afficher les informations du photographe
     let pagePhotographerTemplate = `
@@ -65,12 +65,12 @@ class photographerCardTemplate {
     
     photographHeader.insertAdjacentHTML('beforeend', pagePhotographerTemplate);
 
-    // Récupérer le bouton de contact et attacher un écouteur d'événement
-    const contactButton = document.querySelector('.contact_button');
-    contactButton.addEventListener('click', () => {
-        contactModal.openModal(); 
-    });
-
+ 
+   // Récupérer le bouton de contact et attacher un écouteur d'événement
+   const contactButton = document.querySelector('.contact_button');
+   contactButton.addEventListener('click', () => {
+       contactModal.openModal(); 
+   });
 
 
 
@@ -149,7 +149,6 @@ class photographerCardTemplate {
 
 
 
-
     // Mise à jour du total des likes et du prix dans le DOM
     const photographLike = document.querySelector('.like-result');
     
@@ -211,5 +210,28 @@ handlelikeButton(photographerMedia, wishlistSubject, wishlistCounter) {
 }
     
 }
+// Code pour l'interaction avec le DOM
+class Photographer {
+    constructor(card) {
+        this._pcard = card;
+        // Autres initialisations
+    }
+
+    initializeDOM() {
+        const contactButton = document.getElementById('contact-button');
+        const contactFormModal = new ContactFormModal(this._pcard.name);
+
+        contactButton.addEventListener('click', () => {
+            contactFormModal.openModal();
+        });
+    }
+}
 
 
+// Code à la fin du fichier pour instancier la classe
+document.addEventListener('DOMContentLoaded', () => {
+    new ContactFormModal();
+    const photographerData = ('../data/photographers.json');
+    const photographerInstance = new Photographer(photographerData); // Instanciation de la classe
+    photographerInstance.initializeDOM(); // Appel de la méthode pour initialiser le DOM
+});
