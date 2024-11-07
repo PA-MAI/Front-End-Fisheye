@@ -84,6 +84,16 @@ class FilterForm {
             const mediaTemplate = this.createMediaTemplate(media);
             mediaWrapper.insertAdjacentHTML('beforeend', mediaTemplate);
         });
+  // Configuration des déclencheurs pour ouvrir la lightbox avec les médias filtrés
+        const mediaElements = document.querySelectorAll('.lightbox-trigger');
+        mediaElements.forEach((element, index) => {
+            element.addEventListener('click', (e) => {
+                e.preventDefault();
+                const mediaUrl = element.getAttribute('data-media-url');
+                const mediaType = element.getAttribute('data-type');
+                window.lightboxInstance.displayLightbox(mediaUrl, mediaType, { index, sortedMedia });
+            });
+        });
     }
 
     createMediaTemplate(media) {
@@ -131,7 +141,14 @@ class FilterForm {
         }
     
         return mediaTemplate;
+        
+// Ajoute un événement de clic pour ouvrir la lightbox
+
+
+
+
     }
+    
 }
 
 // recuperation des données du JSON

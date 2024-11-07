@@ -1,3 +1,5 @@
+
+
 class Lightbox {
     constructor(title, date) {
         this.modal = document.getElementById("lightbox_modal");
@@ -107,3 +109,4 @@ closeLightbox = () => {
     this.modal.style.display = "none";
 }
 }
+window.lightboxInstance = new Lightbox();
