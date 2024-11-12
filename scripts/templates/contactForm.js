@@ -174,29 +174,29 @@ class ContactFormModal {
         this.modalWrapper.innerHTML = `
             <div class="modal-content">
                 <header>
-                    <div class="header-modal">
+                    <div class="header-modal" aria-label="Contact me ${this.photographerName}">
                         <div><h2 class="contact-text">Contactez-moi</h2>
                         <span class="Contact-name">${this.photographerName}</span>
                         </div>
-                        <img src="assets/icons/close.svg" aria-label="fermer la modale de contact" class="close-modal-icon">
+                        <img src="assets/icons/close.svg" aria-label="Close Contact form" class="close-modal-icon">
                     </div>
                 </header>
                 <form id="contactForm">
                     <div class="formData">
                         <label for="firstname">Prénom</label>
-                        <input class="text-control" type="text" id="firstname" name="firstname" placeholder="Votre prénom" required>
+                        <input class="text-control" type="text" id="firstname" name="firstname" aria-label="First name" placeholder="Votre prénom" required>
                     </div>
                     <div class="formData">
                         <label for="lastname">Nom</label>
-                        <input class="text-control" type="text" id="lastname" name="lastname" placeholder="Votre nom" required>
+                        <input class="text-control" type="text" id="lastname" name="lastname" aria-label="Last name" placeholder="Votre nom" required>
                     </div>
                     <div class="formData">
                         <label for="email">E-mail</label>
-                        <input class="text-control" type="email" id="email" name="email" placeholder="Email" required>
+                        <input class="text-control" type="email" id="email" name="email" aria-label="Email" placeholder="Email" required>
                     </div>
                     <div class="formData">
                         <label for="message">Votre message</label>
-                        <textarea class="text-control" id="message" name="message" placeholder="your message" required></textarea>
+                        <textarea class="text-control" id="message" name="message" aria-label="your message" placeholder="votre message" required></textarea>
                     </div>
                     <button type="submit" class="contact_button" aria-label="send">Envoyer</button>
                 </form>

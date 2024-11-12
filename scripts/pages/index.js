@@ -81,7 +81,7 @@ class appPagePhotographer {
                 // Injecter la page créée dans la section photograph-header
                 this.$pageApiWrapper.appendChild(pageTemplate.createPhotographerPage(photographerMedia));
             } else {
-                console.error('Photographer not found');
+                console.error('no choice of Photographer  ');
             }
         } catch (error) {
             console.error('Failed to fetch profiles and media', error);

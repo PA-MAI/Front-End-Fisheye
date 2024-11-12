@@ -1,7 +1,4 @@
 class FilterForm {
-
-
-
     constructor(photographers, media) {
         this.photographers = photographers;
         this.media = media;
@@ -16,9 +13,10 @@ class FilterForm {
 
     populateFilterOptions() {
         const options = [
+            { value: 'title', text: 'Titre' },
             { value: 'popularity', text: 'Popularité' },
-            { value: 'date', text: 'Date' },
-            { value: 'title', text: 'Titre' }
+            { value: 'date', text: 'Date' }
+            
         ];
 
         options.forEach(option => {
@@ -32,66 +30,74 @@ class FilterForm {
     handleFilterChange() {
         const selectedValue = this.filterSelect.value;
         
-        // Filtre les médias pour ne garder que ceux du photographe affiché
-        const photographerId = this.photographers[0].id; // Remplace par l'ID du photographe actuel
+        // Obtenez l'ID du photographe actuel dynamiquement en récupérant les éléments affichés sur la page
+        const photographerName = document.querySelector('.page__card--name').textContent;
+        const photographer = this.photographers.find(p => p.name === photographerName);
+        
+        if (!photographer) {
+            console.error("Photographe non trouvé pour le nom :", photographerName);
+            return;
+        }
+
+        const photographerId = photographer.id;
         const photographerMedia = this.media.filter(media => media.photographerId === photographerId);
     
+        // Trier les médias en fonction de la sélection
         let sortedMedia;
-        if (selectedValue === 'popularity') {
-            sortedMedia = this.sortByLikes(photographerMedia);
-        } else if (selectedValue === 'date') {
-            sortedMedia = this.sortByDate(photographerMedia);
-        } else if (selectedValue === 'title') {
+        if (selectedValue === 'title') {
             sortedMedia = this.sortByTitle(photographerMedia);
+        }  else if (selectedValue === 'date') {
+            sortedMedia = this.sortByDate(photographerMedia);
+        } else if  (selectedValue === 'popularity') {
+            sortedMedia = this.sortByLikes(photographerMedia);
         }
     
-        // Met à jour l'affichage des médias avec sortedMedia
-        this.updateMediaDisplay(sortedMedia);
-        let totalLikes = photographerMedia.reduce((sum, media) => sum + media.likes, 0);
-        console.log("Total Likes au chargement : ", totalLikes); // Vérification de la valeur
-        
+        // Met à jour l'affichage des médias avec sortedMedia et passe `photographerId` pour la lightbox
+        this.updateMediaDisplay(sortedMedia, photographerId);
+
+        // Recalcule les likes totaux
+        let totalLikes = sortedMedia.reduce((sum, media) => sum + media.likes, 0);
         const wishlistSubject = new WishlistSubject();
         const wishlistCounter = new WhishListCounter(totalLikes);
         wishlistSubject.subscribe(wishlistCounter);
 
         // Re-applique les écouteurs d'événements pour les boutons de "like"
-    const photographerInstance = new photographerCardTemplate(this.photographers[0]); 
-    // Assure que wishlistSubject est bien défini ou passé ici
-    photographerInstance.handlelikeButton(sortedMedia, wishlistSubject, wishlistCounter); 
-
-
-}
+        const photographerInstance = new photographerCardTemplate(photographer);
+        photographerInstance.handlelikeButton(sortedMedia, wishlistSubject, wishlistCounter);
+    }
     
-
+    sortByTitle(media) {
+        return media.sort((a, b) => a.title.localeCompare(b.title));
+    }
     sortByLikes(media) {
-        return media.sort((a, b) => b.likes - a.likes); // Tri décroissant par le nombre de likes
+        return media.sort((a, b) => b.likes - a.likes);
     }
 
     sortByDate(media) {
-        return media.sort((a, b) => new Date(b.date) - new Date(a.date)); // Tri décroissant par date
+        return media.sort((a, b) => new Date(b.date) - new Date(a.date));
     }
 
-    sortByTitle(media) {
-        return media.sort((a, b) => a.title.localeCompare(b.title)); // Tri croissant par titre
-    }
+    
 
-    updateMediaDisplay(sortedMedia) {
-        // mise à jour de l'affichage des médias
+    updateMediaDisplay(sortedMedia, photographerId) {
         const mediaWrapper = document.querySelector('.photographer-media');
         mediaWrapper.innerHTML = ''; // Effacer l'affichage actuel
-
+    
         sortedMedia.forEach(media => {
             const mediaTemplate = this.createMediaTemplate(media);
             mediaWrapper.insertAdjacentHTML('beforeend', mediaTemplate);
         });
-  // Configuration des déclencheurs pour ouvrir la lightbox avec les médias filtrés
+    
+        // Configuration des déclencheurs pour ouvrir la lightbox avec les médias filtrés
         const mediaElements = document.querySelectorAll('.lightbox-trigger');
         mediaElements.forEach((element, index) => {
             element.addEventListener('click', (e) => {
                 e.preventDefault();
-                const mediaUrl = element.getAttribute('data-media-url');
-                const mediaType = element.getAttribute('data-type');
-                window.lightboxInstance.displayLightbox(mediaUrl, mediaType, { index, sortedMedia });
+                const photographerFirstName = this.photographers.find(p => p.id === photographerId).name.split(" ")[0];
+                
+                // Passer `null` pour `sortedMedia` si nous utilisons les médias par défaut sans filtre
+                const mediaToPass = sortedMedia.length ? sortedMedia : null;
+                window.lightboxInstance.displayLightbox(sortedMedia[index], photographerId, photographerFirstName, mediaToPass);
             });
         });
     }
@@ -104,7 +110,7 @@ class FilterForm {
         if (media.image) {
             mediaTemplate = `
             <div class="media">
-                    <article class="media-card">
+                <article class="media-card">
                     <a href="#" class="lightbox-trigger" role="link" data-media-url="./assets/PhotosVideos/${photographerFirstName}/${media.image}" data-type="image">
                         <img src="./assets/PhotosVideos/${photographerFirstName}/${media.image}" alt="lien vers la photo ${media.title} de ${media.name}">
                     </a>
@@ -121,7 +127,7 @@ class FilterForm {
         } else if (media.video) {
             mediaTemplate = `
             <div class="media">
-                 <article class="media-card">
+                <article class="media-card">
                     <a href="#" class="lightbox-trigger" role="link" data-media-url="./assets/PhotosVideos/${photographerFirstName}/${media.video}" data-type="video">
                         <video class="video-thumbnail">
                             <source src="./assets/PhotosVideos/${photographerFirstName}/${media.video}" type="video/mp4">
@@ -129,29 +135,22 @@ class FilterForm {
                         </video>
                     </a>
                 </article>
-                    <div class="media-text">
-                        <span class="media-title">${media.title}</span>
-                        <span class="nb-likes">
-                            <span class="likes-count">${media.likes}</span>
-                            <i class="fa-regular fa-heart wish-btn" aria-hidden="true" data-id="${media.id}"></i>
-                        </span>
-                    </div>
-                </article>
+                <div class="media-text">
+                    <span class="media-title">${media.title}</span>
+                    <span class="nb-likes">
+                        <span class="likes-count">${media.likes}</span>
+                        <i class="fa-regular fa-heart wish-btn" aria-hidden="true" data-id="${media.id}"></i>
+                    </span>
+                </div>
             </div>`;
         }
     
         return mediaTemplate;
-        
-// Ajoute un événement de clic pour ouvrir la lightbox
-
-
-
-
     }
     
 }
 
-// recuperation des données du JSON
+// Récupération des données du JSON
 fetch('./data/photographers.json')
     .then(response => response.json())
     .then(data => {
