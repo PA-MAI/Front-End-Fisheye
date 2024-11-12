@@ -1,7 +1,7 @@
 class Lightbox {
     constructor() {
         this.modal = document.getElementById("lightbox_modal");
-        this.pageApi = new ProfilApiPhotographer('../data/photographers.json'); 
+        this.pageApi = new ProfilApiPhotographer('./data/photographers.json'); 
         this.currentIndex = 0;
         this.mediaData = [];
         this.mediaIds = []; 
