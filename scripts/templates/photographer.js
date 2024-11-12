@@ -68,8 +68,8 @@ class photographerCardTemplate {
                 <div class="media">
                     <article class="media-card">
                         <a href="#" class="lightbox-trigger" role="link" aria-label="${media.title},closeup view” 
-                           data-media-id="${media.id}" data-media-url="../assets/PhotosVideos/${photographerFirstName}/${media.image}" data-type="image">
-                            <img src="../assets/PhotosVideos/${photographerFirstName}/${media.image}" alt="Picture ${media.title} of ${this._pcard.name}">
+                           data-media-id="${media.id}" data-media-url="./assets/PhotosVideos/${photographerFirstName}/${media.image}" data-type="image">
+                            <img src="./assets/PhotosVideos/${photographerFirstName}/${media.image}" alt="Picture ${media.title} of ${this._pcard.name}">
                         </a>
                     </article>
                     <div class="media-text">
@@ -85,9 +85,9 @@ class photographerCardTemplate {
                 <div class="media">
                     <article class="media-card">
                         <a href="#" class="lightbox-trigger" role="link" aria-label="${media.title},closeup view” 
-                           data-media-id="${media.id}" data-media-url="../assets/PhotosVideos/${photographerFirstName}/${media.video}" data-type="video">
+                           data-media-id="${media.id}" data-media-url="./assets/PhotosVideos/${photographerFirstName}/${media.video}" data-type="video">
                             <video class="video-thumbnail">
-                                <source src="../assets/PhotosVideos/${photographerFirstName}/${media.video}" type="video/mp4">
+                                <source src="./assets/PhotosVideos/${photographerFirstName}/${media.video}" type="video/mp4">
                                 Your browser does not support the video tag.
                             </video>
                         </a>
