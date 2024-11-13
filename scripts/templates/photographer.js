@@ -109,12 +109,13 @@ class photographerCardTemplate {
                 item.addEventListener('click', (event) => {
                     event.preventDefault();
 
-                    const mediaUrl = event.target.closest('a').dataset.mediaUrl;
-                    const mediaType = event.target.closest('a').dataset.type;
-                    const mediaId = parseInt(event.target.closest('a').dataset.mediaId, 10);
-                    debugger
+                   // const mediaUrl = event.target.closest('a').dataset.mediaUrl;
+                  //  const mediaType = event.target.closest('a').dataset.type;
+                    //const mediaId = parseInt(event.target.closest('a').dataset.mediaId, 10);
+                    
                     // Trouver l'objet media pour récupérer le titre et autres informations
-                    const mediaObj = photographerMedia.find(media => media.id === mediaId);
+                    //const mediaObj = photographerMedia.find(media => media.id === mediaId);
+                    //debugger
                     
                     lightboxInstance.displayLightbox(media, this._pcard.id, photographerFirstName,photographerMedia);
                 });
