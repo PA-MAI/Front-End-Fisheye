@@ -112,11 +112,11 @@ class photographerCardTemplate {
                     const mediaUrl = event.target.closest('a').dataset.mediaUrl;
                     const mediaType = event.target.closest('a').dataset.type;
                     const mediaId = parseInt(event.target.closest('a').dataset.mediaId, 10);
-                    
+                    debugger
                     // Trouver l'objet media pour récupérer le titre et autres informations
                     const mediaObj = photographerMedia.find(media => media.id === mediaId);
                     
-                    lightboxInstance.displayLightbox(mediaUrl, mediaType, mediaObj, this._pcard.id, photographerFirstName);
+                    lightboxInstance.displayLightbox(media, this._pcard.id, photographerFirstName,photographerMedia);
                 });
             });
         });

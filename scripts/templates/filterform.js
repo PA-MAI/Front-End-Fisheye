@@ -30,7 +30,7 @@ class FilterForm {
     handleFilterChange() {
         const selectedValue = this.filterSelect.value;
         
-        // Obtenez l'ID du photographe actuel dynamiquement en récupérant les éléments affichés sur la page
+        // Obtient l'ID du photographe actuel dynamiquement en récupérant les éléments affichés sur la page
         const photographerName = document.querySelector('.page__card--name').textContent;
         const photographer = this.photographers.find(p => p.name === photographerName);
         
@@ -94,7 +94,7 @@ class FilterForm {
             element.addEventListener('click', (e) => {
                 e.preventDefault();
                 const photographerFirstName = this.photographers.find(p => p.id === photographerId).name.split(" ")[0];
-                
+                debugger
                 // Passer `null` pour `sortedMedia` si nous utilisons les médias par défaut sans filtre
                 const mediaToPass = sortedMedia.length ? sortedMedia : null;
                 window.lightboxInstance.displayLightbox(sortedMedia[index], photographerId, photographerFirstName, mediaToPass);
