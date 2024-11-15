@@ -9,7 +9,7 @@ class Lightbox {
     }
 
     async displayLightbox(mediaData, photographerId, photographerFirstName, sortedMedia = null) {
-        //debugger
+        debugger
         // Utiliser `sortedMedia` si disponible, sinon charger les médias par défaut
         this.mediaData = sortedMedia || await this.pageApi.getDefaultMedia(photographerId);
 

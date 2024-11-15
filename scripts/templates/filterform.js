@@ -43,7 +43,9 @@ class FilterForm {
         const photographerMedia = this.media.filter(media => media.photographerId === photographerId);
     
         // Trier les médias en fonction de la sélection
-        let sortedMedia;
+        let sortedMedia = this.sortByTitle(photographerMedia);
+        console.log(photographerMedia)
+
         if (selectedValue === 'title') {
             sortedMedia = this.sortByTitle(photographerMedia);
         }  else if (selectedValue === 'date') {
@@ -91,8 +93,8 @@ class FilterForm {
         // Configuration des déclencheurs pour ouvrir la lightbox avec les médias filtrés
         const mediaElements = document.querySelectorAll('.lightbox-trigger');
         mediaElements.forEach((element, index) => {
-            element.addEventListener('click', (e) => {
-                e.preventDefault();
+            element.addEventListener('click', (event) => {
+                event.preventDefault();
                 const photographerFirstName = this.photographers.find(p => p.id === photographerId).name.split(" ")[0];
                 //debugger
                 // Passer `null` pour `sortedMedia` si nous utilisons les médias par défaut sans filtre

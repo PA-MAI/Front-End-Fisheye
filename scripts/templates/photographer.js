@@ -65,62 +65,86 @@ class photographerCardTemplate {
 
             if (media.image) {
                 mediaTemplate = `
-                <div class="media">
-                    <article class="media-card">
-                        <a href="#" class="lightbox-trigger" role="link" aria-label="${media.title},closeup view” 
-                           data-media-id="${media.id}" data-media-url="./assets/PhotosVideos/${photographerFirstName}/${media.image}" data-type="image">
-                            <img src="./assets/PhotosVideos/${photographerFirstName}/${media.image}" alt="Picture ${media.title} of ${this._pcard.name}">
-                        </a>
-                    </article>
-                    <div class="media-text">
-                        <span class="media-title">${media.title}</span>
-                        <span class="nb-likes">
-                            <span class="likes-count">${media.likes}</span> 
-                            <i class="fa-regular fa-heart wish-btn" aria-label="likes" aria-hidden="true" data-id="${media.id}"></i>
-                        </span>
-                    </div>
-                </div>`;
-            } else if (media.video) {
-                mediaTemplate = `
-                <div class="media">
-                    <article class="media-card">
-                        <a href="#" class="lightbox-trigger" role="link" aria-label="${media.title},closeup view” 
-                           data-media-id="${media.id}" data-media-url="./assets/PhotosVideos/${photographerFirstName}/${media.video}" data-type="video">
-                            <video class="video-thumbnail">
-                                <source src="./assets/PhotosVideos/${photographerFirstName}/${media.video}" type="video/mp4">
-                                Your browser does not support the video tag.
-                            </video>
-                        </a>
-                    </article>
-                    <div class="media-text">
-                        <span class="media-title">${media.title}</span>
-                        <span class="nb-likes">
-                            <span class="likes-count">${media.likes}</span>
-                            <i class="fa-regular fa-heart wish-btn" aria-label="likes" aria-hidden="true" data-id="${media.id}"></i>
-                        </span>
-                    </div>
-                </div>`;
-            }
+                 <div class="media">
+            <article class="media-card">
+                <a href="#" class="lightbox-trigger" role="link" aria-label="${media.title}, closeup view" 
+                   data-media-id="${media.id}" data-media-url="./assets/PhotosVideos/${photographerFirstName}/${media.image}" data-type="image">
+                    <img src="./assets/PhotosVideos/${photographerFirstName}/${media.image}" alt="Picture ${media.title} of ${this._pcard.name}">
+                </a>
+            </article>
+            <div class="media-text">
+                <span class="media-title">${media.title}</span>
+                <span class="nb-likes">
+                    <span class="likes-count">${media.likes}</span> 
+                    <i class="fa-regular fa-heart wish-btn" aria-label="likes" aria-hidden="true" data-id="${media.id}"></i>
+                </span>
+            </div>
+        </div>`;
+    } else if (media.video) {
+        mediaTemplate = `
+        <div class="media">
+            <article class="media-card">
+                <a href="#" class="lightbox-trigger" role="link" aria-label="${media.title}, closeup view" 
+                   data-media-id="${media.id}" data-media-url="./assets/PhotosVideos/${photographerFirstName}/${media.video}" data-type="video">
+                    <video class="video-thumbnail">
+                        <source src="./assets/PhotosVideos/${photographerFirstName}/${media.video}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </a>
+            </article>
+            <div class="media-text">
+                <span class="media-title">${media.title}</span>
+                <span class="nb-likes">
+                    <span class="likes-count">${media.likes}</span>
+                    <i class="fa-regular fa-heart wish-btn" aria-label="likes" aria-hidden="true" data-id="${media.id}"></i>
+                </span>
+            </div>
+        </div>`;
+    }
 
             mediaWrapper.insertAdjacentHTML('beforeend', mediaTemplate);
 
             // Attacher l'événement de la lightbox avec toutes les informations
-            document.querySelectorAll('.lightbox-trigger').forEach(item => {
-                item.addEventListener('click', (event) => {
-                    event.preventDefault();
+            document.querySelector('.photographer-media').addEventListener('click', async (event) => {
+                const mediaElement = event.target.closest('.lightbox-trigger');
+                if (!mediaElement) return; // Si le clic n'est pas sur une lightbox-trigger, ignorer
+            
+                event.preventDefault();
+            
+                // Récupérer les données de l'élément cliqué
+                const mediaId = parseInt(mediaElement.dataset.mediaId, 10);
+                if (isNaN(mediaId)) {
+                    console.error("Erreur : mediaId n'est pas un nombre valide.", mediaElement.dataset.mediaId);
+                    return;
+                }
+            
+                // Charger les données du photographe
+                this.photographerId = this._pcard.id;
+                this.pageApi = new ProfilApiPhotographer('./data/photographers.json');
+                const mediaData = await this.pageApi.getDefaultMedia(this.photographerId);
+            
+                // Trouver l'index du média
+                const currentIndex = mediaData.findIndex(media => media.id === mediaId);
+                if (currentIndex === -1) {
+                    console.error("Erreur : média non trouvé dans mediaData. mediaId:", mediaId);
+                    return;
+                }
+            
+                // Afficher la lightbox avec les bonnes données
+                lightboxInstance.displayLightbox(
+                    mediaData[currentIndex],
+                    this.photographerId,
+                    this._pcard.name.split(" ")[0], // Prénom du photographe
+                    mediaData
+        );
+    });
 
-                   // const mediaUrl = event.target.closest('a').dataset.mediaUrl;
-                  //  const mediaType = event.target.closest('a').dataset.type;
-                    //const mediaId = parseInt(event.target.closest('a').dataset.mediaId, 10);
-                    
-                    // Trouver l'objet media pour récupérer le titre et autres informations
-                    //const mediaObj = photographerMedia.find(media => media.id === mediaId);
-                    //debugger
-                    
-                    lightboxInstance.displayLightbox(media, this._pcard.id, photographerFirstName,photographerMedia);
-                });
-            });
-        });
+                   // lightboxInstance.displayLightbox(media,mediaUrl,mediaType, mediaId, this.photographerId, photographerFirstName,photographerMedia,sortedMedia);
+             // );
+          //});
+       //});
+  });
+    
 
         // Mettre à jour le total des likes
         const photographLike = document.querySelector('.like-result');
@@ -141,7 +165,7 @@ class photographerCardTemplate {
         contactButton.addEventListener('click', () => {
             contactModal.openModal(); 
         });
-    }
+    };
 
     handlelikeButton(photographerMedia, wishlistSubject, wishlistCounter) {
         document.querySelectorAll('.fa-heart').forEach(icon => {

@@ -134,22 +134,21 @@ class ValidForm {
     const message = form.message.value;
 
     // Construire l'URL mailto (remplacer destinataire@example.com par une adresse réelle)
-    const mailtoLink = `mailto:destinataire@example.com?subject=Message de ${firstname} ${lastname}&body=${encodeURIComponent(message)}%0D%0A%0D%0AContact : ${email}`;
-
+    const mailtoLink = `mailto:destinataire@example.com?subject=Message de ${email},${firstname} ${lastname}&body=Bonjour ${this.photographerName}, voici mon message:voici mon message: ${message} Contact : ${email}`;
+   
+    location.href = mailtoLink
     // Ouvrir le client de messagerie
-    window.location.href = mailtoLink;
+    //window.location.href = mailtoLink;
 
     console.log("Formulaire validé avec succès, mailto ouvert !");
-    
-    
-     
+
 } else {
             console.log("Formulaire invalide, veuillez corriger les erreurs.");
         }
     }
 }
 }
-
+const formKeeper = new keepForm();
 
 class ContactFormModal {
     constructor(photographerName) {
@@ -158,19 +157,21 @@ class ContactFormModal {
         this.form = null; // Initialisé plus tard
         this.validForm = null; // Initialisé plus tard
         this.errorFunctions = null;//Initialisé plus tard
+        
+        
     }
 
     addEventListeners() {
         if (this.form) {
             this.form.addEventListener("submit", (event) => {
-                event.preventDefault(); // Empêcher la soumission du formulaire pour le contrôle de la validation
+                event.preventDefault(); // Empêche la soumission du formulaire pour le contrôle de la validation
                 this.validForm.runForm(event);
             });
         }
     }
 
     openModal() {
-        // Injecter le contenu HTML du formulaire dans la modale
+        // Injecte le contenu HTML du formulaire dans la modale
         this.modalWrapper.innerHTML = `
             <div class="modal-content">
                 <header>
@@ -204,18 +205,22 @@ class ContactFormModal {
         `;
         
 
-        // Assurer que `this.form` fait bien référence au formulaire injecté
+        // Assure que `this.form` fait bien référence au formulaire injecté
         this.form = document.getElementById("contactForm");
         console.log('Formulaire injecté et écouteurs ajoutés.');
 
-        // Initialiser les fonctions de validation et d'erreurs après l'injection
+        // Initialise les fonctions de validation et d'erreurs après l'injection
         this.errorFunctions = new ErrorFunctions();
         this.validForm = new ValidForm(this.form, this.errorFunctions);
+        
+        
 
-        // Afficher la modale
+        // Affiche la modale
         this.modalWrapper.style.display = "flex";
 
-        // Ajouter les écouteurs d'événements
+        
+
+        // Ajoute les écouteurs d'événements
         const closeModalIcon = this.modalWrapper.querySelector('.close-modal-icon');
         closeModalIcon.addEventListener('click', () => this.closeModal());
         this.addEventListeners();
@@ -223,6 +228,7 @@ class ContactFormModal {
         
     }
     addEventListeners() {
+        
         const form = document.querySelector("#contactForm");
         if (form) {
             form.addEventListener("input", (event) => {
@@ -247,10 +253,22 @@ class ContactFormModal {
     isValidForm() {
         // Vérifie si le formulaire est valide avant de fermer la modale
         return !this.form.querySelector(".errorMessage");
+
     }
 
     closeModal() {
-        this.modalWrapper.style.display = "none"; // Fermer la modale
-        this.modalWrapper.innerHTML = ""; // Vider le contenu HTML de la modale
+        // Sauvegarde les données du formulaire
+        formKeeper.keepFormData(this.form);
+
+        // Récupère l'historique des données soumises
+        const history = formKeeper.getFormDataHistory();
+        console.log('Historique des données du formulaire :', history);
+
+        // Ferme la modale
+        this.modalWrapper.style.display = "none"; 
+        this.modalWrapper.innerHTML = ""; // Vide le contenu HTML de la modale
+        
+        //reset form
+        this.form.reset();
     }
 }
