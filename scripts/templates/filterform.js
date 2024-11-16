@@ -96,7 +96,7 @@ class FilterForm {
             element.addEventListener('click', (event) => {
                 event.preventDefault();
                 const photographerFirstName = this.photographers.find(p => p.id === photographerId).name.split(" ")[0];
-                //debugger
+                
                 // Passer `null` pour `sortedMedia` si nous utilisons les médias par défaut sans filtre
                 const mediaToPass = sortedMedia.length ? sortedMedia : null;
                 window.lightboxInstance.displayLightbox(sortedMedia[index], photographerId, photographerFirstName, mediaToPass);

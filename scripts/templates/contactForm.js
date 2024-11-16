@@ -5,12 +5,13 @@ class ErrorFunctions {
         if (!spanErrorMessage) {
             spanErrorMessage = document.createElement("span");
             spanErrorMessage.className = "errorMessage";
+            spanErrorMessage.setAttribute("role", "alert");
             input.parentElement.appendChild(spanErrorMessage);
-            console.log("Création d'un message d'erreur pour :", input.name);
+            //console.log("Création d'un message d'erreur pour :", input.name);
         }
         spanErrorMessage.innerText = message;
         input.classList.add("errorStyle");
-        console.log("Message d'erreur affiché :", message);
+        //console.log("Message d'erreur affiché :", message);
     }
 
     deleteError(input) {
@@ -18,7 +19,7 @@ class ErrorFunctions {
         if (spanErrorMessage) {
             spanErrorMessage.remove();
             input.classList.remove("errorStyle");
-            console.log("Message d'erreur supprimé pour :", input.name);
+            //console.log("Message d'erreur supprimé pour :", input.name);
         }
     }
 }
@@ -82,7 +83,7 @@ class ValidForm {
             }
 
             this.errorFunctions.deleteError(input); 
-            console.log(`${input.name} champ validé avec succès.`);
+            //console.log(`${input.name} champ validé avec succès.`);
         } catch (error) {
             this.errorFunctions.displayError(input, error.message); 
             console.log(`Erreur détectée pour ${input.name} : ${error.message}`);
@@ -91,64 +92,41 @@ class ValidForm {
 
     runForm(event) {
         event.preventDefault();
-        let isValid = true;
         const form = event.target;
-
+        let isValid = true;
+    
+        // Créer une instance pour garder l'historique des données
+        const keepFormInstance = new keepForm();
+        
+        // Sauvegarder les données du formulaire avant la validation
+        keepFormInstance.keepFormData(form);
+        
+        // Nettoyer les erreurs existantes
         form.querySelectorAll(".errorMessage").forEach(error => error.remove());
         form.querySelectorAll(".errorStyle").forEach(input => input.classList.remove("errorStyle"));
-
-        try {
-            this.validFirst(form.firstname); 
-            this.errorFunctions.deleteError(form.firstname);
-        } catch (error) {
-            this.errorFunctions.displayError(form.firstname, error.message);
-            isValid = false;
-        }
-
-        try {
-            this.validLast(form.lastname); 
-            this.errorFunctions.deleteError(form.lastname);
-        } catch (error) {
-            this.errorFunctions.displayError(form.lastname, error.message);
-            isValid = false;
-        }
-
-        try {
-            this.validEmail(form.email); 
-            this.errorFunctions.deleteError(form.email);
-        } catch (error) {
-            this.errorFunctions.displayError(form.email, error.message);
-            isValid = false;
-        }
-
-        try {
-            this.validMessage(form.message); 
-            this.errorFunctions.deleteError(form.message);
-            isValid = false;
-        } catch {
-
-       if (isValid) {
-    const firstname = form.firstname.value;
-    const lastname = form.lastname.value;
-    const email = form.email.value;
-    const message = form.message.value;
-
-    // Construire l'URL mailto (remplacer destinataire@example.com par une adresse réelle)
-    const mailtoLink = `mailto:destinataire@example.com?subject=Message de ${email},${firstname} ${lastname}&body=Bonjour ${this.photographerName}, voici mon message:voici mon message: ${message} Contact : ${email}`;
-   
-    location.href = mailtoLink
-    // Ouvrir le client de messagerie
-    //window.location.href = mailtoLink;
-
-    console.log("Formulaire validé avec succès, mailto ouvert !");
-
-} else {
-            console.log("Formulaire invalide, veuillez corriger les erreurs.");
-        }
+    
+        // Fonction de validation générique
+        const validateField = (field, validateFn) => {
+            try {
+                validateFn(field);  // Exécuter la fonction de validation
+                this.errorFunctions.deleteError(field);  // Supprimer l'erreur
+            } catch (error) {
+                this.errorFunctions.displayError(field, error.message);  // Afficher l'erreur
+                isValid = false;
+            }
+        };
+    
+        // Validation des champs
+        validateField(form.firstname, this.validFirst.bind(this));
+        validateField(form.lastname, this.validLast.bind(this));
+        validateField(form.email, this.validEmail.bind(this));
+        validateField(form.message, this.validMessage.bind(this));
+    
+       
     }
 }
-}
-const formKeeper = new keepForm();
+
+
 
 class ContactFormModal {
     constructor(photographerName) {
@@ -158,17 +136,12 @@ class ContactFormModal {
         this.validForm = null; // Initialisé plus tard
         this.errorFunctions = null;//Initialisé plus tard
         
+        this.keepFormInstance = new keepForm(); // Instanciation de keepForm
+        
         
     }
 
-    addEventListeners() {
-        if (this.form) {
-            this.form.addEventListener("submit", (event) => {
-                event.preventDefault(); // Empêche la soumission du formulaire pour le contrôle de la validation
-                this.validForm.runForm(event);
-            });
-        }
-    }
+   
 
     openModal() {
         // Injecte le contenu HTML du formulaire dans la modale
@@ -185,19 +158,19 @@ class ContactFormModal {
                 <form id="contactForm">
                     <div class="formData">
                         <label for="firstname">Prénom</label>
-                        <input class="text-control" type="text" id="firstname" name="firstname" aria-label="First name" placeholder="Votre prénom" required>
+                        <input class="text-control" type="text" id="firstname" name="firstname" aria-label="First name" placeholder="Votre prénom">
                     </div>
                     <div class="formData">
                         <label for="lastname">Nom</label>
-                        <input class="text-control" type="text" id="lastname" name="lastname" aria-label="Last name" placeholder="Votre nom" required>
+                        <input class="text-control" type="text" id="lastname" name="lastname" aria-label="Last name" placeholder="Votre nom">
                     </div>
                     <div class="formData">
                         <label for="email">E-mail</label>
-                        <input class="text-control" type="email" id="email" name="email" aria-label="Email" placeholder="Email" required>
+                        <input class="text-control" type="text" id="email" name="email" aria-label="Email" placeholder="Email">
                     </div>
                     <div class="formData">
                         <label for="message">Votre message</label>
-                        <textarea class="text-control" id="message" name="message" aria-label="your message" placeholder="votre message" required></textarea>
+                        <textarea class="text-control" id="message" name="message" aria-label="your message" placeholder="votre message"></textarea>
                     </div>
                     <button type="submit" class="contact_button" aria-label="send">Envoyer</button>
                 </form>
@@ -212,13 +185,11 @@ class ContactFormModal {
         // Initialise les fonctions de validation et d'erreurs après l'injection
         this.errorFunctions = new ErrorFunctions();
         this.validForm = new ValidForm(this.form, this.errorFunctions);
-        
-        
+
 
         // Affiche la modale
         this.modalWrapper.style.display = "flex";
 
-        
 
         // Ajoute les écouteurs d'événements
         const closeModalIcon = this.modalWrapper.querySelector('.close-modal-icon');
@@ -228,20 +199,39 @@ class ContactFormModal {
         
     }
     addEventListeners() {
+        const form = this.form;
         
-        const form = document.querySelector("#contactForm");
+
         if (form) {
             form.addEventListener("input", (event) => {
                 this.validForm.validForm(event);
-                console.log("Input détecté :", event.target.name);
+                // console.log("Input détecté :", event.target.name);
             });
-        
+
             form.addEventListener("submit", (event) => {
-                event.preventDefault();
-                console.log("Formulaire soumis.");
-                
+                event.preventDefault(); // Empêcher le comportement par défaut du formulaire
+                //console.log("Formulaire soumis.");
+                this.validForm.runForm(event);
+
+                const firstname = form.firstname.value;
+                const lastname = form.lastname.value;
+                const email = form.email.value;
+                const message = form.message.value;
+
+                // Sauvegarder les données dans keepForm (avant de valider ou envoyer l'email)
+                this.keepFormInstance.keepFormData(form);
+                console.log("Données sauvegardées dans keepForm :", this.keepFormInstance.getFormDataHistory());
+
                 // Fermer la modale après une soumission valide
                 if (this.isValidForm()) {
+                    // Construire l'URL mailto
+                    const mailtoLink = `mailto:destinataire@example.com?subject=Message de ${email},${firstname} ${lastname}&body=Bonjour ${this.photographerName}, voici mon message: ${message}, cordialement ${firstname} ${lastname} Contact : ${email}`;
+
+                    // Ouvrir le client de messagerie
+                    window.location.href = mailtoLink;
+                    console.log("Formulaire validé avec succès, mailto ouvert !", email, firstname, lastname, message);
+
+                    // Fermer la modale après soumission
                     this.closeModal();
                 }
             });
@@ -257,12 +247,7 @@ class ContactFormModal {
     }
 
     closeModal() {
-        // Sauvegarde les données du formulaire
-        formKeeper.keepFormData(this.form);
-
-        // Récupère l'historique des données soumises
-        const history = formKeeper.getFormDataHistory();
-        console.log('Historique des données du formulaire :', history);
+       
 
         // Ferme la modale
         this.modalWrapper.style.display = "none"; 

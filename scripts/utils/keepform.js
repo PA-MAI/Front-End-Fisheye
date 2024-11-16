@@ -2,22 +2,27 @@ let formDataHistory = [];
 
 class keepForm {
     keepFormData(contactForm) {
-    const formData = {};
+        const formData = {};
 
-    // get all form fields 
-    const input = contactForm.querySelectorAll("input, textarea");
-    if (input.name) { 
-        formData[input.name] = input.value;
-        }
-    
-             // push new data in table formDataHistory
-            formDataHistory.push(formData);
-            console.log("Données du formulaire sauvegardées :", formData);
-        }
-        //option: Function for view submission history
-        getFormDataHistory() {
-            return formDataHistory;
-        }
+        // Récupère tous les champs d'entrée (input, textarea)
+        const inputs = contactForm.querySelectorAll("input, textarea");
 
+        // Itère sur chaque champ pour collecter les valeurs
+        inputs.forEach((input) => {
+            if (input.name) { // S'assure que le champ a un nom valide
+                formData[input.name] = input.value;
+            }
+        });
+
+        // Ajoute les données collectées à l'historique
+        formDataHistory.push(formData);
+
+        // Affiche les données dans la console
+        console.log("Données du formulaire sauvegardées :", formData);
     }
 
+    // Fonction pour afficher l'historique
+    getFormDataHistory() {
+        return formDataHistory;
+    }
+}

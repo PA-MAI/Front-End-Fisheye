@@ -84,11 +84,12 @@ class appPagePhotographer {
                 console.error('no choice of Photographer  ');
             }
         } catch (error) {
-            console.error('Failed to fetch profiles and media', error);
-        }
+           // console.error('Failed to fetch profiles and media', error);
+       //}
     }
    
  }
+}
 
 
 // Écouter l'événement DOMContentLoaded pour s'assurer que le DOM est prêt
