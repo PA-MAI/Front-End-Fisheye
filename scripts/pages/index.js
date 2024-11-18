@@ -64,18 +64,36 @@ class appPagePhotographer {
         return params.get('name'); // Extraction du paramètre "name" de l'URL
     }
 
+    //Méthode pour récupérer l'id' du photographe à partir de l'URL
+    //getPhotographerIdFromURL() {
+      //  const params = new URLSearchParams(window.location.search);
+      //return params.get('name'); // Extraction du paramètre "name" de l'URL
+    //}
+
+
     // Méthode principale pour afficher les détails du photographe et ses médias
     async main() {
         try {
             const { photographers, media } = await this.pageApi.getProfilAndMedia();
-            const photographerName = this.getPhotographerNameFromURL(); // Récupérer le nom du photographe
+
+            const photographerName = this.getPhotographerNameFromURL(); // Récupére le nom du photographe à remplacer par une variable id type:
+            //   const photographerId = this.getPhotographerIdFromURL();
     
             // Trouver le photographe correspondant au nom récupéré dans l'URL
             const photographer = photographers.find(p => p.name === photographerName);
+            //const this.photographerId = photographers.find (m => m.photographerId === photographer.id);
+           // if (this.photographerId) {
+                //const photographer = photographer.name;
+               //console.log("Le nom du photographe est :", photographer);
+            //} else {
+             //   console.log("Photographe non trouvé.");
+            //}
+            // const photographer = 
     
             if (photographer) {
                 // Créer une nouvelle page pour ce photographe
                 const pageTemplate = new photographerCardTemplate(photographer);
+
                 // Filtrer les médias du photographe
                 const photographerMedia = media.filter(m => m.photographerId === photographer.id);
                 // Injecter la page créée dans la section photograph-header

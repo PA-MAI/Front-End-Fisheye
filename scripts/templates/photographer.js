@@ -26,7 +26,8 @@ class photographerCardTemplate {
         $wrapper.innerHTML = CardTemplate;
         return $wrapper;
     }
-
+// il faudra modifier href="photographer.html?name=${this._pcard.name}"  en  href="photographer.html?id=${this._pcard.id}" 
+//mais je dois auparavent identifier toutes mes methodes qui utilisent l'url pour extraire le nom 
     createPhotographerPage(photographerMedia) {
         const photographHeader = document.querySelector('.photograph-header');
         photographHeader.innerHTML = '';
