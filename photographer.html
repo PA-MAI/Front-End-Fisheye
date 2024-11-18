@@ -11,7 +11,7 @@
   </head>
   <body>
     <header>
-      <a href="./index.html" title="lien vers la page d'accueil"> 
+      <a href="./index.html" title="lien vers la page d'accueil" > 
         <img src="./assets/images/logo.png" role="link" class="fisheye-logo" alt="Fisheye Home page">
       </a>
     </header>
@@ -22,7 +22,7 @@
       </div>
       <div class="filter-section">
         <span>Trier par</span>
-      <select class="filter-select">
+      <select class="filter-select" tabindex="0">
         <!-- Le filtre du photographe est injecté ici -->
       </select>
     </div>
@@ -31,10 +31,10 @@
     </div>
     </main>
     <div id="lightbox_modal" class="lightbox">
-      <div class="lightbox_modal"></div>
+      <div class="lightbox_modal" role="dialog" aria-labelledby="lightboxTitle" aria-hidden="true"></div>
       <!-- La lightbox est injectée ici -->
     </div>
-    <div id="contact_modal">
+    <div id="contact_modal" >
 			<!-- La modale de contact est injectée ici -->
 		</div>
     <div class="like-result">

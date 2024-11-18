@@ -9,7 +9,7 @@ class photographerCardTemplate {
 
         const CardTemplate = `
             <article class="card" role="figure" aria-label="card-photographer">
-                <a class="card-profil" title="View the profile of ${this._pcard.name}" 
+                <a class="card-profil" title="View the profile of ${this._pcard.name} tabindex="0" 
                    href="photographer.html?name=${this._pcard.name}" role="link">
                     <img class="card-portrait" alt="Profile of ${this._pcard.name}, slogan: ${this._pcard.tagline}."
                          src="./assets/photographers/${this._pcard.portrait}">
@@ -42,7 +42,7 @@ class photographerCardTemplate {
                     <p class="page__card--tag">${this._pcard.tagline}</p>
                 </div>
                 <div>
-                    <button class="contact_button" role="link" aria-label="Contact Me">Contactez-moi</button>
+                    <button class="contact_button" role="link" aria-label="Contact Me" tabindex="0">Contactez-moi</button>
                 </div>
                 <div class="page__card--profil" title="View the profile of ${this._pcard.name}" role="title">
                     <img class="page__card--portrait" alt="${this._pcard.name}, son slogan: ${this._pcard.tagline}."
@@ -68,15 +68,17 @@ class photographerCardTemplate {
                  <div class="media">
             <article class="media-card">
                 <a href="#" class="lightbox-trigger" role="link" aria-label="${media.title}, closeup view" 
-                   data-media-id="${media.id}" data-media-url="./assets/PhotosVideos/${photographerFirstName}/${media.image}" data-type="image">
+                   data-media-id="${media.id}" data-media-url="./assets/PhotosVideos/${photographerFirstName}/${media.image}" data-type="image" >
                     <img src="./assets/PhotosVideos/${photographerFirstName}/${media.image}" alt="Picture ${media.title} of ${this._pcard.name}">
                 </a>
             </article>
             <div class="media-text">
                 <span class="media-title">${media.title}</span>
-                <span class="nb-likes">
-                    <span class="likes-count">${media.likes}</span> 
-                    <i class="fa-regular fa-heart wish-btn" aria-label="likes" aria-hidden="true" data-id="${media.id}"></i>
+                <span class="nb-likes" >
+                    <span class="likes-count">${media.likes}</span>
+                    <button class="wish-btn" aria-label="likes" aria-hidden="true" tabindex="-1">
+                    <i class="fa-regular fa-heart" data-id="${media.id}" tabindex="0"></i>
+                    </button>       
                 </span>
             </div>
         </div>`;
@@ -85,8 +87,8 @@ class photographerCardTemplate {
         <div class="media">
             <article class="media-card">
                 <a href="#" class="lightbox-trigger" role="link" aria-label="${media.title}, closeup view" 
-                   data-media-id="${media.id}" data-media-url="./assets/PhotosVideos/${photographerFirstName}/${media.video}" data-type="video">
-                    <video class="video-thumbnail">
+                   data-media-id="${media.id}" data-media-url="./assets/PhotosVideos/${photographerFirstName}/${media.video}" data-type="video" src="./assets/PhotosVideos/${photographerFirstName}/${media.video}" type="video/mp4">
+                   <video class="video-thumbnail" tabindex="-1">
                         <source src="./assets/PhotosVideos/${photographerFirstName}/${media.video}" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
@@ -94,9 +96,11 @@ class photographerCardTemplate {
             </article>
             <div class="media-text">
                 <span class="media-title">${media.title}</span>
-                <span class="nb-likes">
+                <span class="nb-likes" >
                     <span class="likes-count">${media.likes}</span>
-                    <i class="fa-regular fa-heart wish-btn" aria-label="likes" aria-hidden="true" data-id="${media.id}"></i>
+                    <button class="wish-btn" aria-label="likes" aria-hidden="true" tabindex="-1">
+                    <i class="fa-regular fa-heart" data-id="${media.id}" tabindex="0" ></i>
+                    </button>
                 </span>
             </div>
         </div>`;
@@ -139,10 +143,7 @@ class photographerCardTemplate {
         );
     });
 
-                   // lightboxInstance.displayLightbox(media,mediaUrl,mediaType, mediaId, this.photographerId, photographerFirstName,photographerMedia,sortedMedia);
-             // );
-          //});
-       //});
+                 
   });
     
 
@@ -161,6 +162,7 @@ class photographerCardTemplate {
 
         this.handlelikeButton(photographerMedia, wishlistSubject, wishlistCounter);
 
+        // ouverture de la modale de contact
         const contactButton = document.querySelector('.contact_button');
         contactButton.addEventListener('click', () => {
             contactModal.openModal(); 
@@ -168,27 +170,49 @@ class photographerCardTemplate {
     };
 
     handlelikeButton(photographerMedia, wishlistSubject, wishlistCounter) {
+        // Sélectionner tous les icônes de cœur
         document.querySelectorAll('.fa-heart').forEach(icon => {
+            // Ajouter un gestionnaire pour le clic
             icon.addEventListener('click', (event) => {
-                const mediaId = event.target.getAttribute('data-id');
-                const media = photographerMedia.find(m => m.id == mediaId);
-                const likesElement = event.target.closest('.nb-likes').querySelector('.likes-count');
-
-                if (event.target.classList.contains('liked')) {
-                    event.target.classList.remove('liked');
-                    event.target.classList.replace('fa-solid', 'fa-regular');
-                    media.likes -= 1;
-                    wishlistCounter.update('DEC');
-                } else {
-                    event.target.classList.add('liked');
-                    event.target.classList.replace('fa-regular', 'fa-solid');
-                    media.likes += 1;
-                    wishlistCounter.update('INC');
-                }
-
-                likesElement.textContent = media.likes;
-                wishlistCounter._$wishCount.textContent = wishlistCounter._count;
+                this._toggleLike(event, photographerMedia, wishlistCounter);
             });
+    
+            // Ajouter un gestionnaire pour la touche Entrée ou Espace
+            icon.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter' || event.key === ' ') { // Vérifie Entrée ou Espace
+                    event.preventDefault(); // Empêche le défilement pour Espace
+                    this._toggleLike(event, photographerMedia, wishlistCounter);
+                }
+            });
+    
+            // Assurer que l'élément est focusable au clavier
+            icon.setAttribute('tabindex', '0');
+            icon.setAttribute('role', 'button'); // Optionnel pour une meilleure accessibilité
+            icon.setAttribute('aria-pressed', 'false'); // Attribut ARIA pour indiquer l'état
         });
+    }
+    
+    // Nouvelle méthode privée pour gérer le toggle du like
+    _toggleLike(event, photographerMedia, wishlistCounter) {
+        const mediaId = event.target.getAttribute('data-id');
+        const media = photographerMedia.find(m => m.id == mediaId);
+        const likesElement = event.target.closest('.nb-likes').querySelector('.likes-count');
+    
+        if (event.target.classList.contains('liked')) {
+            event.target.classList.remove('liked');
+            event.target.classList.replace('fa-solid', 'fa-regular');
+            media.likes -= 1;
+            wishlistCounter.update('DEC');
+            event.target.setAttribute('aria-pressed', 'false'); // Mise à jour ARIA
+        } else {
+            event.target.classList.add('liked');
+            event.target.classList.replace('fa-regular', 'fa-solid');
+            media.likes += 1;
+            wishlistCounter.update('INC');
+            event.target.setAttribute('aria-pressed', 'true'); // Mise à jour ARIA
+        }
+    
+        likesElement.textContent = media.likes;
+        wishlistCounter._$wishCount.textContent = wishlistCounter._count;
     }
 }

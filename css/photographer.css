@@ -5,6 +5,13 @@
     font-family: "DM Sans", sans-serif;
 }
 
+body.modal-open {
+    overflow: hidden; /* Empêche le défilement */
+}
+
+body.modal-open *:not(.modal) {
+    pointer-events: none; /* Désactive les clics et les interactions sur l'arriere plan */
+}
 
 .photograph-header {
     background-color: #FAFAFA;
@@ -169,13 +176,20 @@
     
 }
 .wish-btn{
-
+height:30px;
+width: 30px;
+font-size: 0.9em;
     cursor: pointer; 
     color: #901C1C;
+    text-decoration: none;
+    border: 0;
+    background-color: white;
+    padding: 0 ;
 }
 .wish-btn:hover{
     cursor: pointer; 
     color: #901C1C;
+    text-decoration: none;
     
 }
 .like-result{
@@ -199,7 +213,7 @@
     margin-top:15px;
 }
 .result-likes .heart{
-margin-left: 10px;
+    margin-left: 10px;
 }
 
 #contact_modal {

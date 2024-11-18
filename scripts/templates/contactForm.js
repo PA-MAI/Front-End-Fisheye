@@ -3,12 +3,24 @@ class ErrorFunctions {
     displayError(input, message) {
         let spanErrorMessage = input.parentElement.querySelector(".errorMessage");
         if (!spanErrorMessage) {
+            // Si non, crée un nouveau span pour afficher l'erreur
             spanErrorMessage = document.createElement("span");
             spanErrorMessage.className = "errorMessage";
             spanErrorMessage.setAttribute("role", "alert");
+            spanErrorMessage.setAttribute("aria-invalid", "true");
             input.parentElement.appendChild(spanErrorMessage);
-            //console.log("Création d'un message d'erreur pour :", input.name);
+            
+        // Crée un ID unique pour le span
+        const errorId = `error-${input.name}`;
+        spanErrorMessage.id = errorId;
+
+        // Lier le champ d'entrée au message d'erreur
+        input.setAttribute("aria-describedby", errorId);
+
+        input.parentElement.appendChild(spanErrorMessage);
+        //console.log("Création d'un message d'erreur pour :", input.name);
         }
+        // Mettre à jour le contenu du message d'erreur
         spanErrorMessage.innerText = message;
         input.classList.add("errorStyle");
         //console.log("Message d'erreur affiché :", message);
@@ -18,6 +30,8 @@ class ErrorFunctions {
         const spanErrorMessage = input.parentElement.querySelector(".errorMessage");
         if (spanErrorMessage) {
             spanErrorMessage.remove();
+            // Supprime l'attribut aria-describedby du champ
+            input.removeAttribute("aria-describedby");
             input.classList.remove("errorStyle");
             //console.log("Message d'erreur supprimé pour :", input.name);
         }
@@ -135,7 +149,6 @@ class ContactFormModal {
         this.form = null; // Initialisé plus tard
         this.validForm = null; // Initialisé plus tard
         this.errorFunctions = null;//Initialisé plus tard
-        
         this.keepFormInstance = new keepForm(); // Instanciation de keepForm
         
         
@@ -152,31 +165,45 @@ class ContactFormModal {
                         <div><h2 class="contact-text">Contactez-moi</h2>
                         <span class="Contact-name">${this.photographerName}</span>
                         </div>
-                        <img src="assets/icons/close.svg" aria-label="Close Contact form" class="close-modal-icon">
+                        <img src="assets/icons/close.svg" aria-label="Close Contact form" class="close-modal-icon" tabindex="0">
                     </div>
                 </header>
                 <form id="contactForm">
                     <div class="formData">
                         <label for="firstname">Prénom</label>
-                        <input class="text-control" type="text" id="firstname" name="firstname" aria-label="First name" placeholder="Votre prénom">
+                        <input class="text-control" type="text" id="firstname" name="firstname" aria-label="First name" placeholder="Votre prénom" aria-required="true">
                     </div>
                     <div class="formData">
                         <label for="lastname">Nom</label>
-                        <input class="text-control" type="text" id="lastname" name="lastname" aria-label="Last name" placeholder="Votre nom">
+                        <input class="text-control" type="text" id="lastname" name="lastname" aria-label="Last name" placeholder="Votre nom" aria-required="true">
                     </div>
                     <div class="formData">
                         <label for="email">E-mail</label>
-                        <input class="text-control" type="text" id="email" name="email" aria-label="Email" placeholder="Email">
+                        <input class="text-control" type="text" id="email" name="email" aria-label="Email" placeholder="Email" aria-required="true">
                     </div>
                     <div class="formData">
                         <label for="message">Votre message</label>
-                        <textarea class="text-control" id="message" name="message" aria-label="your message" placeholder="votre message"></textarea>
+                        <textarea class="text-control" id="message" name="message" aria-label="your message" placeholder="votre message" aria-required="true"></textarea>
                     </div>
-                    <button type="submit" class="contact_button" aria-label="send">Envoyer</button>
+                    <button type="submit" class="contact_button" aria-label="send" tabindex="0">Envoyer</button>
                 </form>
             </div>
         `;
         
+         
+
+        // Gérer le focus
+        const focusableElements = this.modalWrapper.querySelectorAll(
+        'a, button, textarea, input[type="text"], input[type="email"], [tabindex]:not([tabindex="-1"])'
+        );
+
+        if (focusableElements.length > 0) {
+        focusableElements[0].focus();
+        }
+
+        // Ajouter le piège de focus
+        document.addEventListener("keydown", this.trapFocus.bind(this));
+    
 
         // Assure que `this.form` fait bien référence au formulaire injecté
         this.form = document.getElementById("contactForm");
@@ -191,13 +218,47 @@ class ContactFormModal {
         this.modalWrapper.style.display = "flex";
 
 
-        // Ajoute les écouteurs d'événements
+        // Ajoute les écouteurs d'événements pour fermer la modale click ou clavier
         const closeModalIcon = this.modalWrapper.querySelector('.close-modal-icon');
         closeModalIcon.addEventListener('click', () => this.closeModal());
         this.addEventListeners();
+        closeModalIcon.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === ' ') { 
+                event.preventDefault(); 
+                console.log('modale fermée via le clavier !');
+                this.closeModal(); 
+        }
+    });
 
-        
+        // Ajoute un écouteur pour intercepter les tabulations
+        document.addEventListener("keydown", this.trapFocus.bind(this));
+        if (focusableElements.length > 0) {
+            focusableElements[0].focus(); // Met le focus sur le premier élément
+        }
     }
+
+    trapFocus(event) {
+        if (event.key !== "Tab") return; // Ignorer si ce n'est pas "Tab"
+    
+        const focusableElements = this.modalWrapper.querySelectorAll(
+            'a, button, textarea, input[type="text"], input[type="email"], input[type="submit"], [tabindex]:not([tabindex="-1"])'
+        );
+    
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+    
+        // Si "Shift + Tab" et on est sur le premier élément
+        if (event.shiftKey && document.activeElement === firstElement) {
+            event.preventDefault();
+            lastElement.focus();
+        }
+        // Si "Tab" et on est sur le dernier élément
+        else if (!event.shiftKey && document.activeElement === lastElement) {
+            event.preventDefault();
+            firstElement.focus();
+        }
+    }
+
     addEventListeners() {
         const form = this.form;
         
@@ -209,34 +270,36 @@ class ContactFormModal {
             });
 
             form.addEventListener("submit", (event) => {
-                event.preventDefault(); // Empêcher le comportement par défaut du formulaire
+                // Empêche le comportement par défaut du formulaire
+                event.preventDefault(); 
                 //console.log("Formulaire soumis.");
                 this.validForm.runForm(event);
 
+                // variables pour le mailto
                 const firstname = form.firstname.value;
                 const lastname = form.lastname.value;
                 const email = form.email.value;
                 const message = form.message.value;
 
-                // Sauvegarder les données dans keepForm (avant de valider ou envoyer l'email)
+                // Sauvegarde les données dans keepForm (avant de valider ou envoyer l'email)
                 this.keepFormInstance.keepFormData(form);
                 console.log("Données sauvegardées dans keepForm :", this.keepFormInstance.getFormDataHistory());
 
-                // Fermer la modale après une soumission valide
+                // Ferme la modale après une soumission valide
                 if (this.isValidForm()) {
                     // Construire l'URL mailto
                     const mailtoLink = `mailto:destinataire@example.com?subject=Message de ${email},${firstname} ${lastname}&body=Bonjour ${this.photographerName}, voici mon message: ${message}, cordialement ${firstname} ${lastname} Contact : ${email}`;
 
-                    // Ouvrir le client de messagerie
+                    // Ouvre le client de messagerie
                     window.location.href = mailtoLink;
                     console.log("Formulaire validé avec succès, mailto ouvert !", email, firstname, lastname, message);
 
-                    // Fermer la modale après soumission
+                    // Ferme la modale après soumission
                     this.closeModal();
                 }
             });
         } else {
-            console.error('Formulaire non trouvé après injection.'); // Log d'erreur ici
+            console.error('Formulaire non trouvé après injection.'); 
         }
     }
     
@@ -251,8 +314,19 @@ class ContactFormModal {
 
         // Ferme la modale
         this.modalWrapper.style.display = "none"; 
-        this.modalWrapper.innerHTML = ""; // Vide le contenu HTML de la modale
-        
+
+        // Vide le contenu HTML de la modale
+        this.modalWrapper.innerHTML = ""; 
+
+         // Retire l'écouteur pour le piège de focus
+         document.removeEventListener("keydown", this.trapFocus.bind(this));
+
+        // Optionnel : Restaurer le focus sur le bouton qui a ouvert la modale
+        const openButton = document.querySelector(".open-modal-button");
+        if (openButton) {
+        openButton.focus();
+        }
+
         //reset form
         this.form.reset();
     }

@@ -113,16 +113,17 @@ class FilterForm {
             mediaTemplate = `
             <div class="media">
                 <article class="media-card">
-                    <a href="#" class="lightbox-trigger" role="link" data-media-url="./assets/PhotosVideos/${photographerFirstName}/${media.image}" data-type="image">
+                    <a href="#" class="lightbox-trigger" role="link" aria-label="${media.title}, closeup view"  data-media-url="./assets/PhotosVideos/${photographerFirstName}/${media.image}" data-type="image">
                         <img src="./assets/PhotosVideos/${photographerFirstName}/${media.image}" alt="lien vers la photo ${media.title} de ${media.name}">
                     </a>
                 </article>
-
                 <div class="media-text">
                     <span class="media-title">${media.title}</span>
                     <span class="nb-likes">
                         <span class="likes-count">${media.likes}</span> 
-                        <i class="fa-regular fa-heart wish-btn" aria-hidden="true" data-id="${media.id}"></i>
+                       <button class="wish-btn" aria-label="likes" aria-hidden="true" tabindex="-1">
+                    <i class="fa-regular fa-heart" data-id="${media.id}" tabindex="0"></i>
+                    </button>
                     </span>
                 </div>
             </div>`;
@@ -131,7 +132,7 @@ class FilterForm {
             <div class="media">
                 <article class="media-card">
                     <a href="#" class="lightbox-trigger" role="link" data-media-url="./assets/PhotosVideos/${photographerFirstName}/${media.video}" data-type="video">
-                        <video class="video-thumbnail">
+                        <video class="video-thumbnail" tabindex="-1">
                             <source src="./assets/PhotosVideos/${photographerFirstName}/${media.video}" type="video/mp4">
                             Your browser does not support the video tag.
                         </video>
@@ -141,7 +142,9 @@ class FilterForm {
                     <span class="media-title">${media.title}</span>
                     <span class="nb-likes">
                         <span class="likes-count">${media.likes}</span>
-                        <i class="fa-regular fa-heart wish-btn" aria-hidden="true" data-id="${media.id}"></i>
+                         <button class="wish-btn" aria-label="likes" aria-hidden="true" tabindex="-1">
+                    <i class="fa-regular fa-heart" data-id="${media.id}" tabindex="0"></i>
+                    </button>
                     </span>
                 </div>
             </div>`;
