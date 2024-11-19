@@ -55,20 +55,7 @@ class appPagePhotographer {
         // Sélection du conteneur pour les photos/médias
         this.$mediaWrapper = document.querySelector('.photographer-media');
 
-        
     }
-
-    // Méthode pour récupérer le nom du photographe à partir de l'URL
-    getPhotographerNameFromURL() {
-        const params = new URLSearchParams(window.location.search);
-        return params.get('name'); // Extraction du paramètre "name" de l'URL
-    }
-
-    //Méthode pour récupérer l'id' du photographe à partir de l'URL
-    //getPhotographerIdFromURL() {
-      //  const params = new URLSearchParams(window.location.search);
-      //return params.get('name'); // Extraction du paramètre "name" de l'URL
-    //}
 
 
     // Méthode principale pour afficher les détails du photographe et ses médias
@@ -76,23 +63,24 @@ class appPagePhotographer {
         try {
             const { photographers, media } = await this.pageApi.getProfilAndMedia();
 
-            const photographerName = this.getPhotographerNameFromURL(); // Récupére le nom du photographe à remplacer par une variable id type:
-            //   const photographerId = this.getPhotographerIdFromURL();
-    
-            // Trouver le photographe correspondant au nom récupéré dans l'URL
-            const photographer = photographers.find(p => p.name === photographerName);
-            //const this.photographerId = photographers.find (m => m.photographerId === photographer.id);
-           // if (this.photographerId) {
-                //const photographer = photographer.name;
-               //console.log("Le nom du photographe est :", photographer);
-            //} else {
-             //   console.log("Photographe non trouvé.");
-            //}
-            // const photographer = 
-    
+            // récupère la query string de l'URL
+            const photographerIdFromUrl = window.location.search; 
+
+            // extrait l'ID de l'URL
+            const photographerId = new URLSearchParams(photographerIdFromUrl).get('id'); 
+            console.log ("photographerId",photographerId)
+            
+
+            //Recherche le photographe correspondant à l'ID dans l'URL
+            const photographer = photographers.find(m => m.id == photographerId); 
+            console.log ("Photographer",photographer)
+            
+          // Vérifie si le photographe a été trouvé et récupère son nom
+
             if (photographer) {
                 // Créer une nouvelle page pour ce photographe
                 const pageTemplate = new photographerCardTemplate(photographer);
+                console.log("Le nom du photographe est :", photographer.name);
 
                 // Filtrer les médias du photographe
                 const photographerMedia = media.filter(m => m.photographerId === photographer.id);
@@ -103,11 +91,11 @@ class appPagePhotographer {
             }
         } catch (error) {
            // console.error('Failed to fetch profiles and media', error);
-       //}
+       }
     }
    
  }
-}
+
 
 
 // Écouter l'événement DOMContentLoaded pour s'assurer que le DOM est prêt

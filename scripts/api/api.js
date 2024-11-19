@@ -53,8 +53,3 @@ class ProfilApiPhotographer extends Api {
     }
 }
 //
-//class URLManager {
-   // static getPhotographerPageURL(photographerId) {
-      //  return `photographer.html?id=${photographerId}`;
-   // }
-//}

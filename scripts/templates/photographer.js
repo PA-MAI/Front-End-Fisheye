@@ -10,7 +10,7 @@ class photographerCardTemplate {
         const CardTemplate = `
             <article class="card" role="figure" aria-label="card-photographer">
                 <a class="card-profil" title="View the profile of ${this._pcard.name} tabindex="0" 
-                   href="photographer.html?name=${this._pcard.name}" role="link">
+                   href="photographer.html?id=${this._pcard.id}" role="link">
                     <img class="card-portrait" alt="Profile of ${this._pcard.name}, slogan: ${this._pcard.tagline}."
                          src="./assets/photographers/${this._pcard.portrait}">
                     <h2 class="card-name">${this._pcard.name}</h2>
