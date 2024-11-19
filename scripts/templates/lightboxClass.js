@@ -133,7 +133,6 @@ class Lightbox {
         this.setupNavigationListeners();
 
         // Gere le piege à focus de la lightbox 
-        
         const lightboxFocusTrap = new LightboxFocusTrap(lightboxWrapper);
         // Focus sur le premier élément interactif (par exemple, chevron gauche ou bouton de fermeture)
         if (lightboxFocusTrap.firstFocusableElement) {
@@ -160,8 +159,28 @@ class Lightbox {
         this.handlePrev = () => this.navigateMedia(-1);
         this.handleNext = () => this.navigateMedia(1);
 
-        prevButton.addEventListener('click', this.handlePrev);
-        nextButton.addEventListener('click', this.handleNext);
+        
+        if (prevButton) {
+            prevButton.addEventListener('click', this.handlePrev);
+            prevButton.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter' || event.key === ' ') { 
+                    event.preventDefault(); 
+                    console.log('previous picture via le clavier !');
+                    this.handlePrev(); 
+        }
+        });
+        }
+        
+        if (nextButton) {
+            nextButton.addEventListener('click', this.handleNext);      
+            nextButton.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter' || event.key === ' ') { 
+                    event.preventDefault(); 
+                    console.log('next picture via le clavier !');
+                    this.handleNext(); 
+        }
+        });
+        }
     }
 
     navigateMedia(direction) {
@@ -175,6 +194,15 @@ class Lightbox {
 
         // Charger le média correspondant au nouvel index
         this.loadMedia(this.currentIndex);
+        // Gérer le focus en fonction de la direction
+        const prevButton = this.modal.querySelector('.lightbox-prev');
+        const nextButton = this.modal.querySelector('.lightbox-next');
+
+        if (direction === -1 && prevButton) {
+        prevButton.focus(); // Rester sur le bouton "Précédent"
+        } else if (direction === 1 && nextButton) {
+        nextButton.focus(); // Rester sur le bouton "Suivant"
+    }
     }
 
     closeLightbox() {
