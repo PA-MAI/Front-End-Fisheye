@@ -229,6 +229,12 @@ class ContactFormModal {
                 this.closeModal(); 
         }
     });
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            console.log('modale fermée via Escape !');
+            this.closeModal();
+        }
+    });
 
         // Ajoute un écouteur pour intercepter les tabulations
         document.addEventListener("keydown", this.trapFocus.bind(this));

@@ -126,8 +126,15 @@ class Lightbox {
                     console.log('lightbox fermée via le clavier !');
                     this.closeLightbox(); 
         }
+       
         });
         }
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                console.log('lightbox fermée via Escape !');
+                this.closeLightbox();
+            }
+        });
     
         // Mettre à jour les écouteurs de navigation à chaque chargement de contenu
         this.setupNavigationListeners();
