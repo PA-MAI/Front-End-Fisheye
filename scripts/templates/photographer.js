@@ -9,10 +9,10 @@ class photographerCardTemplate {
 
         const CardTemplate = `
             <article class="card" role="figure" aria-label="card-photographer">
-                <a class="card-profil" title="View the profile of ${this._pcard.name} tabindex="0" 
-                   href="photographer.html?id=${this._pcard.id}" role="link">
-                    <img class="card-portrait" alt="Profile of ${this._pcard.name}, slogan: ${this._pcard.tagline}."
-                         src="./assets/photographers/${this._pcard.portrait}">
+                <a role ="link" class="card-profil" title="View the profile of ${this._pcard.name} tabindex="0" aria-label=" go to photographer profile ${this._pcard.name} of ${this._pcard.city}, ${this._pcard.country} collection slogan: ${this._pcard.tagline}"
+                   href="photographer.html?id=${this._pcard.id}" >
+                    <img class="card-portrait" alt="Profile of ${this._pcard.name}, ."
+                         src="./assets/photographers/${this._pcard.portrait}" alt="picture of photographer ${this._pcard.name}">
                     <h2 class="card-name">${this._pcard.name}</h2>
                 </a>
                 <div class="card-text" aria-label="origin">
@@ -26,8 +26,8 @@ class photographerCardTemplate {
         $wrapper.innerHTML = CardTemplate;
         return $wrapper;
     }
-// il faudra modifier href="photographer.html?name=${this._pcard.name}"  en  href="photographer.html?id=${this._pcard.id}" 
-//mais je dois auparavent identifier toutes mes methodes qui utilisent l'url pour extraire le nom 
+
+    
     createPhotographerPage(photographerMedia) {
         const photographHeader = document.querySelector('.photograph-header');
         photographHeader.innerHTML = '';
@@ -38,12 +38,12 @@ class photographerCardTemplate {
         const pagePhotographerTemplate = `
             <article class="page__card" role="figure" aria-label="card-photographer">
                 <div class="page__card--text" aria-label="origin">
-                    <h1 class="page__card--name">${this._pcard.name}</h1>
+                    <h1 class="page__card--name" tabindex="0" aria-label="name of photographe ${this._pcard.name}">${this._pcard.name}</h1>
                     <h2 class="page__card--origine">${this._pcard.city}, ${this._pcard.country}</h2>
                     <p class="page__card--tag">${this._pcard.tagline}</p>
                 </div>
                 <div>
-                    <button class="contact_button" role="link" aria-label="Contact Me" tabindex="0">Contactez-moi</button>
+                    <button class="contact_button" role="link" aria-label="Contact me" tabindex="0">Contactez-moi</button>
                 </div>
                 <div class="page__card--profil" title="View the profile of ${this._pcard.name}" role="title">
                     <img class="page__card--portrait" alt="${this._pcard.name}, son slogan: ${this._pcard.tagline}."
@@ -151,9 +151,9 @@ class photographerCardTemplate {
         // Mettre à jour le total des likes
         const photographLike = document.querySelector('.like-result');
         photographLike.innerHTML = `
-            <div class="result-likes">
-                <div><span class="wish-count">${totalLikes}  </span><span><i class="fa-solid fa-heart heart" aria-hidden="true"></i></span></div>
-                <span><i class="media-likes" aria-label="${totalLikes} likes"></i>${this._pcard.price}€/jours</span>
+            <div class="result-likes" tabindex="0" aria-label="${totalLikes} likes for this photographer, ${this._pcard.price} by day">
+                <div><span class="wish-count" >${totalLikes}  </span><span><i class="fa-solid fa-heart heart" aria-hidden="true" ></i></span></div>
+                <span><i class="media-likes" aria-label="${totalLikes} likes" ></i>${this._pcard.price}€/jours</span>
             </div>
         `;
 

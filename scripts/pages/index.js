@@ -30,7 +30,7 @@ class appProfilPhotographer {
             });
         } catch (error) {
             // Logging any errors that occur during the fetch process
-         //   console.error('Failed to fetch profiles', error);
+         console.error('Failed to fetch profiles', error);
         }
     }
 }
@@ -90,7 +90,7 @@ class appPagePhotographer {
                 console.error('no choice of Photographer  ');
             }
         } catch (error) {
-           // console.error('Failed to fetch profiles and media', error);
+            console.error('Failed to fetch profiles and media', error);
        }
     }
    

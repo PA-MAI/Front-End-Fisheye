@@ -44,7 +44,7 @@ class ValidForm {
     }
 
     validFirst(first) {
-        const firstRegExp = new RegExp("[a-zA-Z\-\.]+");
+        const firstRegExp = new RegExp("[a-zA-Z-.]+");
         if (first.value === "") {
             throw new Error("Le champ prénom est vide.");
         } else if (!firstRegExp.test(first.value)) {
@@ -55,7 +55,7 @@ class ValidForm {
     }
 
     validLast(last) {
-        const lastRegExp = new RegExp("[a-zA-Z\-\.]+");
+        const lastRegExp = new RegExp("[a-zA-Z-.]+");
         if (last.value === "") {
             throw new Error("Le champ nom est vide.");
         } else if (!lastRegExp.test(last.value)) {
@@ -154,8 +154,6 @@ class ContactFormModal {
         
     }
 
-   
-
     openModal() {
         // Injecte le contenu HTML du formulaire dans la modale
         this.modalWrapper.innerHTML = `
@@ -194,7 +192,7 @@ class ContactFormModal {
 
         // Gérer le focus
         const focusableElements = this.modalWrapper.querySelectorAll(
-        'a, button, textarea, input[type="text"], input[type="email"], [tabindex]:not([tabindex="-1"])'
+        'button, textarea, input[type="text"], input[type="email"], [tabindex]:not([tabindex="-1"])'
         );
 
         if (focusableElements.length > 0) {
@@ -215,7 +213,7 @@ class ContactFormModal {
 
 
         // Affiche la modale
-        this.modalWrapper.style.display = "flex";
+        this.modalWrapper.style.display = "flex";   
 
 
         // Ajoute les écouteurs d'événements pour fermer la modale click ou clavier
@@ -231,7 +229,7 @@ class ContactFormModal {
     });
     document.addEventListener('keydown', (event) => {
         if (event.key === 'Escape') {
-            console.log('modale fermée via Escape !');
+            console.log('Modale fermée avec Escape !');
             this.closeModal();
         }
     });
@@ -247,7 +245,7 @@ class ContactFormModal {
         if (event.key !== "Tab") return; // Ignorer si ce n'est pas "Tab"
     
         const focusableElements = this.modalWrapper.querySelectorAll(
-            'a, button, textarea, input[type="text"], input[type="email"], input[type="submit"], [tabindex]:not([tabindex="-1"])'
+            'button, textarea, input[type="text"], input[type="submit"], [tabindex]:not([tabindex="-1"])'
         );
     
         const firstElement = focusableElements[0];

@@ -40,7 +40,11 @@ class Lightbox {
         // Afficher la lightbox
         this.modal.style.display = "flex";
 
-
+        // Place le focus sur l'élément par defaut
+        const mediaElement = this.modal.querySelector('.lightbox-center'); 
+        if (mediaElement) {
+            mediaElement.focus(); 
+        }
         // Configurer les écouteurs de navigation
         this.setupNavigationListeners();
     }
@@ -123,7 +127,7 @@ class Lightbox {
             closeButton.addEventListener('keydown', (event) => {
                 if (event.key === 'Enter' || event.key === ' ') { 
                     event.preventDefault(); 
-                    console.log('lightbox fermée via le clavier !');
+                 //   console.log('lightbox fermée via le clavier !');
                     this.closeLightbox(); 
         }
        
@@ -131,7 +135,7 @@ class Lightbox {
         }
         document.addEventListener('keydown', (event) => {
             if (event.key === 'Escape') {
-                console.log('lightbox fermée via Escape !');
+              //  console.log('lightbox fermée via Escape !');
                 this.closeLightbox();
             }
         });
@@ -172,7 +176,7 @@ class Lightbox {
             prevButton.addEventListener('keydown', (event) => {
                 if (event.key === 'Enter' || event.key === ' ') { 
                     event.preventDefault(); 
-                    console.log('previous picture via le clavier !');
+                  //  console.log('previous picture via le clavier !');
                     this.handlePrev(); 
         }
         });
@@ -183,7 +187,7 @@ class Lightbox {
             nextButton.addEventListener('keydown', (event) => {
                 if (event.key === 'Enter' || event.key === ' ') { 
                     event.preventDefault(); 
-                    console.log('next picture via le clavier !');
+                  //  console.log('next picture via le clavier !');
                     this.handleNext(); 
         }
         });
@@ -202,8 +206,10 @@ class Lightbox {
         // Charger le média correspondant au nouvel index
         this.loadMedia(this.currentIndex);
         // Gérer le focus en fonction de la direction
-        const prevButton = this.modal.querySelector('.lightbox-prev');
-        const nextButton = this.modal.querySelector('.lightbox-next');
+        const prevButton = this.modal.querySelector('.lightbox-center')
+        //('.lightbox-prev');
+        const nextButton = this.modal.querySelector('.lightbox-center')
+        //('.lightbox-next');
 
         if (direction === -1 && prevButton) {
         prevButton.focus(); // Rester sur le bouton "Précédent"

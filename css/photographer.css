@@ -4,6 +4,11 @@
 .root{
     font-family: "DM Sans", sans-serif;
 }
+/*:focus {
+    outline: 3px solid blue; /* Exemple de style pour le focus */
+ /*   outline-offset: 4px;     /* Décalage de l'outline *//*
+}
+*/
 
 body.modal-open {
     overflow: hidden; /* Empêche le défilement */
