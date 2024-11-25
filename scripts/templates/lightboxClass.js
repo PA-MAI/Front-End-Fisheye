@@ -6,10 +6,13 @@ class Lightbox {
         this.mediaData = [];
         this.mediaIds = []; 
         this.photographerFirstName = "";
+
+
     }
 
     async displayLightbox(mediaData, photographerId, photographerFirstName, sortedMedia = null) {
         
+    
         // Utiliser `sortedMedia` si disponible, sinon charger les médias par défaut
         this.mediaData = sortedMedia || await this.pageApi.getDefaultMedia(photographerId);
 
@@ -38,15 +41,13 @@ class Lightbox {
         this.loadMedia(this.currentIndex);
 
         // Afficher la lightbox
+        
         this.modal.style.display = "flex";
 
-        // Place le focus sur l'élément par defaut
-        const mediaElement = this.modal.querySelector('.lightbox-center'); 
-        if (mediaElement) {
-            mediaElement.focus(); 
-        }
+        
         // Configurer les écouteurs de navigation
         this.setupNavigationListeners();
+        this.setupCloseListeners();
     }
 
     loadMedia(index) {
@@ -69,7 +70,7 @@ class Lightbox {
 
     updateLightboxContent(mediaUrl, mediaType, title, price) {
         const lightboxWrapper = this.modal.querySelector(".lightbox_modal");
-        lightboxWrapper.innerHTML = ''; // Effacer le contenu précédent
+        lightboxWrapper.innerHTML = ''; // Efface le contenu précédent
 
         let lightboxTemplate = '';
         if (mediaType === 'image') {
@@ -77,10 +78,10 @@ class Lightbox {
             
             <div class="lightbox-left">
                 <span class="lightbox-anchor1"></span> 
-                <i class="fa-sharp fa-solid fa-chevron-left lightbox-prev" aria-label="Previous image" tabindex="0"></i>
+                <i class="fa-sharp fa-solid fa-chevron-left lightbox-prev" aria-label="image précédente" tabindex="0"></i>
                 <span class="lightbox-anchor"></span> 
             </div>
-            <div class="lightbox-center" aria-label="image closeup view of ${title}. For sale ${price}€" tabindex="0">
+            <div class="lightbox-center" aria-label="vue agrandie du media ${title}. Vendue ${price} euros" tabindex="0" aria-live="assertive">
                 <div class="player">
                     <img src="${mediaUrl}" alt="${title} - ${price}€" >
                     <div class="lightbox-text" aria-labelledby="lightboxTitle" >
@@ -89,8 +90,8 @@ class Lightbox {
                 </div>
             </div>
             <div class="lightbox-right">
-                <img type="button" src="assets/icons/closelight.svg" aria-label="Close dialog" class="lightbox-close-btn" tabindex="0">
-                <i class="fa-sharp fa-solid fa-chevron-right lightbox-next" aria-label="Next image" tabindex="0"></i>
+                <img type="button" src="assets/icons/closelight.svg" aria-label="Fermer la modale" class="lightbox-close-btn" tabindex="0">
+                <i class="fa-sharp fa-solid fa-chevron-right lightbox-next" aria-label="image suivante" tabindex="0"></i>
                 <span class="lightbox-anchor"></span> 
             </div>
            </div>
@@ -99,57 +100,71 @@ class Lightbox {
             lightboxTemplate = `
             <div class="lightbox-left">
                 <span class="lightbox-anchor"></span> 
-                <i class="fa-sharp fa-solid fa-chevron-left lightbox-prev" aria-label="Previous image" tabindex="0"></i>
+                <i class="fa-sharp fa-solid fa-chevron-left lightbox-prev" aria-label="image précédente" tabindex="0"></i>
                 <span class="lightbox-anchor"></span> 
             </div>
-            <div class="lightbox-center" aria-label="video closeup view of ${title}. For sale ${price}€">
+            <div class="lightbox-center" aria-label="vue agrandie du media ${title}. Vendue ${price} euros">
                 <div class="player">
                     <iframe height="500" width="800" src="${mediaUrl}" allowfullscreen></iframe>
-                    <div class="lightbox-text" aria-labelledby="lightboxTitle>
+                    <div class="lightbox-text" aria-labelledby="lightboxTitle">
                         <span id="lightboxTitle">${title}</span><span>${price}€</span>
                     </div>
                 </div>
             </div>
             <div class="lightbox-right">
                 <img src="assets/icons/closelight.svg" aria-label="Close dialog" class="lightbox-close-btn" tabindex="0">
-                <i class="fa-sharp fa-solid fa-chevron-right lightbox-next" aria-label="Next image" tabindex="0"></i>
+                <i class="fa-sharp fa-solid fa-chevron-right lightbox-next" aria-label="image suivante" tabindex="0"></i>
                 <span class="lightbox-anchor"></span> 
             </div>
             `;
         }
+        const lightboxContent = document.querySelector('.lightbox-center');
+
+        // Forcer une mise à jour de l'attribut aria-live
+        //lightboxContent.setAttribute('aria-live', 'off');
+       // setTimeout(() => {
+        //lightboxContent.setAttribute('aria-live', 'assertive');
+        //}, 0);
 
         lightboxWrapper.insertAdjacentHTML('beforeend', lightboxTemplate);
-
-        // Attacher l'événement de fermeture de la lightbox avec fermeture click ou clavier
-        const closeButton = this.modal.querySelector('.lightbox-close-btn');
-        if (closeButton) {
-            closeButton.addEventListener('click', () => this.closeLightbox());
-            closeButton.addEventListener('keydown', (event) => {
-                if (event.key === 'Enter' || event.key === ' ') { 
-                    event.preventDefault(); 
-                 //   console.log('lightbox fermée via le clavier !');
-                    this.closeLightbox(); 
-        }
-       
-        });
-        }
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape') {
-              //  console.log('lightbox fermée via Escape !');
-                this.closeLightbox();
-            }
-        });
-    
         // Mettre à jour les écouteurs de navigation à chaque chargement de contenu
+        this.setupCloseListeners();
         this.setupNavigationListeners();
-
         // Gere le piege à focus de la lightbox 
         const lightboxFocusTrap = new LightboxFocusTrap(lightboxWrapper);
-        // Focus sur le premier élément interactif (par exemple, chevron gauche ou bouton de fermeture)
+        // Focus sur le premier élément interactif 
         if (lightboxFocusTrap.firstFocusableElement) {
-        lightboxFocusTrap.firstFocusableElement.focus();
+            lightboxFocusTrap.firstFocusableElement.focus();
         }
+
+        const firstFocusableElement = this.modal.querySelector('.lightbox-center');
+        if (firstFocusableElement) {
+            firstFocusableElement.focus();
+        };
     }
+
+
+
+        // Attacher l'événement de fermeture de la lightbox avec fermeture click ou clavier
+        setupCloseListeners() {
+            const closeButton = this.modal.querySelector('.lightbox-close-btn');
+            if (closeButton) {
+                closeButton.addEventListener('click', () => this.closeLightbox());
+                closeButton.addEventListener('keydown', (event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        this.closeLightbox();
+                    }
+                });
+            }
+    
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape') {
+                    this.closeLightbox();
+                }
+            });
+        }
+
 
     setupNavigationListeners() {
         // Sélection des boutons de navigation
@@ -174,7 +189,7 @@ class Lightbox {
         if (prevButton) {
             prevButton.addEventListener('click', this.handlePrev);
             prevButton.addEventListener('keydown', (event) => {
-                if (event.key === 'Enter' || event.key === ' ') { 
+                if (event.key === 'Enter' || event.key === ' ' || event.key === 'ArrowLeft'){ 
                     event.preventDefault(); 
                   //  console.log('previous picture via le clavier !');
                     this.handlePrev(); 
@@ -185,7 +200,7 @@ class Lightbox {
         if (nextButton) {
             nextButton.addEventListener('click', this.handleNext);      
             nextButton.addEventListener('keydown', (event) => {
-                if (event.key === 'Enter' || event.key === ' ') { 
+                if (event.key === 'Enter' || event.key === ' ' || event.key === 'ArrowRight') { 
                     event.preventDefault(); 
                   //  console.log('next picture via le clavier !');
                     this.handleNext(); 
@@ -219,8 +234,11 @@ class Lightbox {
     }
 
     closeLightbox() {
+        
         this.modal.style.display = "none";
+        const lightboxWrapper = this.modal.querySelector('.lightbox_modal');
         lightboxWrapper.classList.add('hidden'); 
+       
         // Redonne le focus au bouton qui a ouvert la lightbox
         document.querySelector('.lightbox_modal').focus();
     }
@@ -229,7 +247,7 @@ class LightboxFocusTrap {
     constructor(lightboxWrapper) {
         this.lightboxWrapper = lightboxWrapper;
         this.focusableElements = lightboxWrapper.querySelectorAll(
-            'button, [tabindex]:not([tabindex="-1"])'
+            'button, [tabindex]:not([tabindex="-1"], a, input, select, textarea)'
         );
         this.firstFocusableElement = this.focusableElements[0];
         this.lastFocusableElement = this.focusableElements[this.focusableElements.length - 1];

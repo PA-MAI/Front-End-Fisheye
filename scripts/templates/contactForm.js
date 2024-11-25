@@ -77,7 +77,10 @@ class ValidForm {
     validMessage(message) {
         if (message.value === "") {
             throw new Error("Le champ message est vide.");
-        } else if (message.value.length > 300) {
+        } else if (message.value.length < 10) {
+            throw new Error("Le message doit faire plus de 10 caractères.");
+        }
+        else if (message.value.length > 300) {
             throw new Error("Le message ne doit pas dépasser 300 caractères.");
         }
     }
@@ -159,31 +162,31 @@ class ContactFormModal {
         this.modalWrapper.innerHTML = `
             <div class="modal-content">
                 <header>
-                    <div class="header-modal" aria-label="Contact me ${this.photographerName}">
+                    <div class="header-modal" aria-label="Contactez-moi ${this.photographerName}">
                         <div><h2 class="contact-text">Contactez-moi</h2>
                         <span class="Contact-name">${this.photographerName}</span>
                         </div>
-                        <img src="assets/icons/close.svg" aria-label="Close Contact form" class="close-modal-icon" tabindex="0">
+                        <img src="assets/icons/close.svg" aria-label="ferme le formulaire de contact" class="close-modal-icon" tabindex="0">
                     </div>
                 </header>
                 <form id="contactForm">
                     <div class="formData">
                         <label for="firstname">Prénom</label>
-                        <input class="text-control" type="text" id="firstname" name="firstname" aria-label="First name" placeholder="Votre prénom" aria-required="true">
+                        <input class="text-control" type="text" id="firstname" name="firstname"  aria-label="votre prénom" placeholder="Votre prénom" aria-required="true">
                     </div>
                     <div class="formData">
                         <label for="lastname">Nom</label>
-                        <input class="text-control" type="text" id="lastname" name="lastname" aria-label="Last name" placeholder="Votre nom" aria-required="true">
+                        <input class="text-control" type="text" id="lastname" name="lastname" aria-label="votre nom" placeholder="Votre nom" aria-required="true">
                     </div>
                     <div class="formData">
                         <label for="email">E-mail</label>
-                        <input class="text-control" type="text" id="email" name="email" aria-label="Email" placeholder="Email" aria-required="true">
+                        <input class="text-control" type="text" id="email" name="email" aria-label="votre Email" placeholder="votre Email" aria-required="true">
                     </div>
                     <div class="formData">
                         <label for="message">Votre message</label>
-                        <textarea class="text-control" id="message" name="message" aria-label="your message" placeholder="votre message" aria-required="true"></textarea>
+                        <textarea class="text-control" id="message" name="message" aria-label="votre message" placeholder="votre message" aria-required="true"></textarea>
                     </div>
-                    <button type="submit" class="contact_button" aria-label="send" tabindex="0">Envoyer</button>
+                    <button type="submit" class="contact_button" aria-label="Envoyer par mail" tabindex="0">Envoyer</button>
                 </form>
             </div>
         `;

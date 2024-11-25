@@ -8,11 +8,11 @@ class photographerCardTemplate {
         $wrapper.classList.add('photographer_section-wrapper');
 
         const CardTemplate = `
-            <article class="card" role="figure" aria-label="card-photographer">
-                <a role ="link" class="card-profil" title="View the profile of ${this._pcard.name} tabindex="0" aria-label=" go to photographer profile ${this._pcard.name} of ${this._pcard.city}, ${this._pcard.country} collection slogan: ${this._pcard.tagline}"
+            <article class="card" role="figure" aria-label="carte du photographer">
+                <a role ="link" class="card-profil" title="vue du profil de ${this._pcard.name} tabindex="0" aria-label=" aller sur le profile de ${this._pcard.name} de ${this._pcard.city}, ${this._pcard.country} son slogan: ${this._pcard.tagline}"
                    href="photographer.html?id=${this._pcard.id}" >
                     <img class="card-portrait" alt="Profile of ${this._pcard.name}, ."
-                         src="./assets/photographers/${this._pcard.portrait}" alt="picture of photographer ${this._pcard.name}">
+                         src="./assets/photographers/${this._pcard.portrait}" alt="image du photographe ${this._pcard.name}">
                     <h2 class="card-name">${this._pcard.name}</h2>
                 </a>
                 <div class="card-text" aria-label="origin">
@@ -36,17 +36,17 @@ class photographerCardTemplate {
         const contactModal = new ContactFormModal(this._pcard.name);
 
         const pagePhotographerTemplate = `
-            <article class="page__card" role="figure" aria-label="card-photographer">
-                <div class="page__card--text" aria-label="origin">
-                    <h1 class="page__card--name" tabindex="0" aria-label="name of photographe ${this._pcard.name}">${this._pcard.name}</h1>
+            <article class="page__card" role="figure" aria-label="carte du photographer">
+                <div class="page__card--text" aria-label="origine">
+                    <h1 class="page__card--name" tabindex="0" aria-label="nom du photographe ${this._pcard.name}">${this._pcard.name}</h1>
                     <h2 class="page__card--origine">${this._pcard.city}, ${this._pcard.country}</h2>
                     <p class="page__card--tag">${this._pcard.tagline}</p>
                 </div>
                 <div>
-                    <button class="contact_button" role="link" aria-label="Contact me" tabindex="0">Contactez-moi</button>
+                    <button class="contact_button" role="link" aria-label="Contactez-moi" tabindex="0">Contactez-moi</button>
                 </div>
-                <div class="page__card--profil" title="View the profile of ${this._pcard.name}" role="title">
-                    <img class="page__card--portrait" alt="${this._pcard.name}, son slogan: ${this._pcard.tagline}."
+                <div class="page__card--profil" title="Vue du profil de ${this._pcard.name}" role="title">
+                    <img class="page__card--portrait" role="imag" alt="${this._pcard.name}, son slogan: ${this._pcard.tagline}."
                         src="./assets/photographers/${this._pcard.portrait}">
                 </div>
             </article>
@@ -68,18 +68,18 @@ class photographerCardTemplate {
                 mediaTemplate = `
                  <div class="media">
             <article class="media-card">
-                <a href="#" class="lightbox-trigger" role="link" aria-label="${media.title}, closeup view" 
+                <a href="#" class="lightbox-trigger" role="link" aria-label="image ${media.title}, vue réduite" 
                    data-media-id="${media.id}" data-media-url="./assets/PhotosVideos/${photographerFirstName}/${media.image}" data-type="image" >
-                    <img src="./assets/PhotosVideos/${photographerFirstName}/${media.image}" alt="Picture ${media.title} of ${this._pcard.name}">
+                    <img src="./assets/PhotosVideos/${photographerFirstName}/${media.image}" alt="Image ${media.title} de ${this._pcard.name}">
                 </a>
             </article>
             <div class="media-text">
                 <span class="media-title">${media.title}</span>
                 <span class="nb-likes" >
-                    <span class="likes-count">${media.likes}</span>
-                    <button class="wish-btn" aria-label="likes" aria-hidden="true" tabindex="-1">
-                    <i class="fa-regular fa-heart" data-id="${media.id}" tabindex="0"></i>
-                    </button>       
+                    <span class="likes-count" tabindex="0" aria-label="Nombre de likes ${media.likes}">${media.likes}</span>
+                     <button class="wish-btn" aria-label="Liker ce media" tabindex="-1" aria-pressed="false" >
+                    <i class="fa-regular fa-heart" data-id="${media.id}" aria-label="Activer le like pour ce media"  tabindex="0" ></i>
+                    </button>
                 </span>
             </div>
         </div>`;
@@ -87,7 +87,7 @@ class photographerCardTemplate {
         mediaTemplate = `
         <div class="media">
             <article class="media-card">
-                <a href="#" class="lightbox-trigger" role="link" aria-label="${media.title}, closeup view" 
+                <a href="#" class="lightbox-trigger" role="link" aria-label=" image ${media.title}, vue réduite" 
                    data-media-id="${media.id}" data-media-url="./assets/PhotosVideos/${photographerFirstName}/${media.video}" data-type="video" src="./assets/PhotosVideos/${photographerFirstName}/${media.video}" type="video/mp4">
                    <video class="video-thumbnail" tabindex="-1">
                         <source src="./assets/PhotosVideos/${photographerFirstName}/${media.video}" type="video/mp4">
@@ -98,9 +98,9 @@ class photographerCardTemplate {
             <div class="media-text">
                 <span class="media-title">${media.title}</span>
                 <span class="nb-likes" >
-                    <span class="likes-count">${media.likes}</span>
-                    <button class="wish-btn" aria-label="likes" aria-hidden="true" tabindex="-1">
-                    <i class="fa-regular fa-heart" data-id="${media.id}" tabindex="0" ></i>
+                     <span class="likes-count" tabindex="0" aria-label="Nombre de likes ${media.likes}">${media.likes}</span>
+                     <button class="wish-btn" aria-label="Liker ce media" tabindex="-1" aria-pressed="false">
+                    <i class="fa-regular fa-heart" data-id="${media.id}" aria-label="Activer le like pour ce media"  tabindex="0" ></i>
                     </button>
                 </span>
             </div>
@@ -150,12 +150,24 @@ class photographerCardTemplate {
 
         // Mettre à jour le total des likes
         const photographLike = document.querySelector('.like-result');
-        photographLike.innerHTML = `
-            <div class="result-likes" tabindex="0" aria-label="${totalLikes} likes for this photographer, ${this._pcard.price} by day">
-                <div><span class="wish-count" >${totalLikes}  </span><span><i class="fa-solid fa-heart heart" aria-hidden="true" ></i></span></div>
-                <span><i class="media-likes" aria-label="${totalLikes} likes" ></i>${this._pcard.price}€/jours</span>
+        photographLike.innerHTML = 
+      
+       `<div class="result-likes" tabindex="0" aria-label="Le photographe a reçu ${totalLikes} likes, son tarif ${this._pcard.price} euros par jour." aria-live="polite">
+        <!-- Bloc du resultat des likes -->
+            <div aria-hidden="true">
+            <span class="wish-count">${totalLikes}</span>
+            <span >
+            <i class="fa-solid fa-heart heart" aria-hidden="true" tabindex="-1" ></i>
+            </span>
             </div>
-        `;
+
+        <!-- Tarif -->
+            <div tabindex="-1" aria-hidden="true">
+                <span>${this._pcard.price} €/jour</span>
+            </div>
+        </div>
+       `;
+    
 
         const wishlistSubject = new WishlistSubject();
         const wishlistCounter = new WhishListCounter(totalLikes);
@@ -173,6 +185,17 @@ class photographerCardTemplate {
     handlelikeButton(photographerMedia, wishlistSubject, wishlistCounter) {
         // Sélectionner tous les icônes de cœur
         document.querySelectorAll('.fa-heart').forEach(icon => {
+            // Vérifier si l'icône est dans .result-likes
+            if (icon.closest('.result-likes')) {
+                // Ne pas ajouter tabindex ni rôle sur cet élément
+                icon.setAttribute('tabindex', '-1'); 
+            } else {
+                // Ajouter tabindex pour tous les autres cœurs
+                icon.setAttribute('tabindex', '0');
+                icon.setAttribute('role', 'button'); // Optionnel pour une meilleure accessibilité
+                icon.setAttribute('aria-pressed', 'false'); // Attribut ARIA pour indiquer l'état
+            }
+    
             // Ajouter un gestionnaire pour le clic
             icon.addEventListener('click', (event) => {
                 this._toggleLike(event, photographerMedia, wishlistCounter);
@@ -185,14 +208,9 @@ class photographerCardTemplate {
                     this._toggleLike(event, photographerMedia, wishlistCounter);
                 }
             });
-    
-            // Assurer que l'élément est focusable au clavier
-            icon.setAttribute('tabindex', '0');
-            icon.setAttribute('role', 'button'); // Optionnel pour une meilleure accessibilité
-            icon.setAttribute('aria-pressed', 'false'); // Attribut ARIA pour indiquer l'état
         });
     }
-    
+
     // Nouvelle méthode privée pour gérer le toggle du like
     _toggleLike(event, photographerMedia, wishlistCounter) {
         const mediaId = event.target.getAttribute('data-id');
@@ -216,4 +234,5 @@ class photographerCardTemplate {
         likesElement.textContent = media.likes;
         wishlistCounter._$wishCount.textContent = wishlistCounter._count;
     }
+    
 }
