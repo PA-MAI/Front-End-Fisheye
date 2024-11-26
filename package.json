@@ -6,6 +6,6 @@
   },
   "scripts": {
     "dev": "http-server",
-    "lint": "eslint ./scripts/pages/*.js"
+    "lint": "eslint ./scripts/*/*.js"
   }
 }

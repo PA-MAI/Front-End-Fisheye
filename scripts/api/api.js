@@ -52,4 +52,3 @@ class ProfilApiPhotographer extends Api {
         return []; // Return an empty array if no media is found
     }
 }
-//

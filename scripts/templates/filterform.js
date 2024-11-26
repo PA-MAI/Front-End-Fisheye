@@ -92,17 +92,26 @@ class FilterForm {
     
         // Configuration des déclencheurs pour ouvrir la lightbox avec les médias filtrés
         const mediaElements = document.querySelectorAll('.lightbox-trigger');
-        mediaElements.forEach((element, index) => {
+
+
+       mediaElements.forEach((element, index) => {
             element.addEventListener('click', (event) => {
-                event.preventDefault();
-                const photographerFirstName = this.photographers.find(p => p.id === photographerId).name.split(" ")[0];
-                
-                // Passer `null` pour `sortedMedia` si nous utilisons les médias par défaut sans filtre
-                const mediaToPass = sortedMedia.length ? sortedMedia : null;
-                window.lightboxInstance.displayLightbox(sortedMedia[index], photographerId, photographerFirstName, mediaToPass);
+            event.preventDefault();
+            const photographerFirstName = this.photographers.find(p => p.id === photographerId).name.split(" ")[0];
+            // Passer `null` pour `sortedMedia` si nous utilisons les médias par défaut sans filtre
+            const mediaToPass = sortedMedia.length ? sortedMedia : null;
+            // Affiche la lightbox avec les médias triés
+             window.lightboxInstance.displayLightbox(sortedMedia[index], photographerId, photographerFirstName, mediaToPass);
             });
-        });
-    }
+         // Recalcule les focusables pour LightboxFocusTrap
+         const lightboxWrapper = document.querySelector('.lightbox_modal');
+         const lightboxFocusTrap = new LightboxFocusTrap(lightboxWrapper);
+         const lightboxCenter = lightboxWrapper.querySelector('.lightbox-center');
+         if (lightboxCenter) {
+             lightboxCenter.focus(); // Focus explicite sur .lightbox-center
+         }
+     });
+ }
 
     createMediaTemplate(media) {
         const photographerFirstName = this.photographers.find(p => p.id === media.photographerId).name.split(" ")[0];
@@ -114,17 +123,17 @@ class FilterForm {
             <div class="media">
                 <article class="media-card">
                     <a href="#" class="lightbox-trigger" role="link" aria-label="image ${media.title}, vue réduite" data-media-url="./assets/PhotosVideos/${photographerFirstName}/${media.image}" data-type="image">
-                        <img src="./assets/PhotosVideos/${photographerFirstName}/${media.image}" alt="lien vers la photo ${media.title} de ${media.name}">
+                        <img src="./assets/PhotosVideos/${photographerFirstName}/${media.image}" alt="lien vers le media ${media.title} de ${media.name}">
                     </a>
                 </article>
                 <div class="media-text">
-                    <span class="media-title">${media.title}</span>
-                   <span class="nb-likes" >
+                     <span class="media-title">${media.title}</span>
+                <span class="nb-likes" >
                     <span class="likes-count" tabindex="0" aria-label="Nombre de likes ${media.likes}">${media.likes}</span>
                      <button class="wish-btn" aria-label="Liker ce media" tabindex="-1" aria-pressed="false" >
                     <i class="fa-regular fa-heart" data-id="${media.id}" aria-label="Activer le like pour ce media"  tabindex="0" ></i>
                     </button>
-                    </span>
+                </span>
                 </div>
             </div>`;
         } else if (media.video) {
@@ -140,12 +149,12 @@ class FilterForm {
                 </article>
                 <div class="media-text">
                     <span class="media-title">${media.title}</span>
-                   <span class="nb-likes" >
+                <span class="nb-likes" >
                     <span class="likes-count" tabindex="0" aria-label="Nombre de likes ${media.likes}">${media.likes}</span>
                      <button class="wish-btn" aria-label="Liker ce media" tabindex="-1" aria-pressed="false" >
                     <i class="fa-regular fa-heart" data-id="${media.id}" aria-label="Activer le like pour ce media"  tabindex="0" ></i>
                     </button>
-                    </span>
+                </span>
                 </div>
             </div>`;
         }
