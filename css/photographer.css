@@ -74,8 +74,7 @@ body.modal-open *:not(.modal) {
 .contact_button:hover{
     background-color:#DB8876;
     color: black;
-    border-color: white;
-    border: 3px;
+    border: 3px white;
 }
 
 .page__card--portrait{
@@ -97,7 +96,7 @@ body.modal-open *:not(.modal) {
   align-items: center;
   
 }
-.filter-section span{
+.filter-section .filter-Label{
     font-weight: 800;
     font-size: 20px;
     margin-right: 20px;
@@ -116,11 +115,7 @@ body.modal-open *:not(.modal) {
     border-radius: 5px;
     padding-left: 8px;
 }
-/*.filter-select:hover{
-    background-color:#DB8876;
-    color: black;
 
-}*/
 .photographer-media{
     display:flex;
     width: 100%;
