@@ -303,6 +303,25 @@ form input {
     border-style: none;
 
 }
+.contactModal_button {
+    align-content: center;
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    padding: 11px;
+    width: 170px;
+    height: 70px;
+    border: none;
+    background-color: #901C1C;
+    border-radius: 5px;
+    cursor: pointer;
+    
+}
+.contactModal_button:hover{
+    background-color:black;
+    color: white;
+    border: 3px white;
+}
 .errorStyle{
     background-color: #901C1C;
 }
@@ -342,6 +361,14 @@ form input {
     border-radius: 5px;
     object-position: center;
 
+}
+.lightbox-video{
+    margin: 35px 50px 10px 50px;
+    object-fit: cover;
+    max-width:90%;
+    max-height:700px;
+    border-radius: 5px;
+    object-position: center;
 }
 .lightbox-close-btn, .fa-sharp{
     font-size: 3em;

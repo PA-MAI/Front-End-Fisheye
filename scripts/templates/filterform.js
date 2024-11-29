@@ -122,39 +122,40 @@ class FilterForm {
             mediaTemplate = `
             <div class="media">
                 <article class="media-card">
-                    <a href="#" class="lightbox-trigger" role="link" aria-label="image ${media.title}, vue réduite" data-media-url="./assets/PhotosVideos/${photographerFirstName}/${media.image}" data-type="image">
+                    <a href="#" class="lightbox-trigger" title="image ${media.title}, vue réduite" 
+                        data-media-url="./assets/PhotosVideos/${photographerFirstName}/${media.image}" data-type="image">
                         <img src="./assets/PhotosVideos/${photographerFirstName}/${media.image}" alt="lien vers le media ${media.title} de ${media.name}">
                     </a>
                 </article>
                 <div class="media-text">
-                     <span class="media-title">${media.title}</span>
-                <span class="nb-likes" >
-                    <span class="likes-count" tabindex="0" aria-label="Nombre de likes ${media.likes}">${media.likes}</span>
-                     <button class="wish-btn" aria-label="Liker ce media" tabindex="-1" aria-pressed="false" >
-                    <i class="fa-regular fa-heart" data-id="${media.id}" aria-label="Activer le like pour ce media"  tabindex="0" ></i>
-                    </button>
-                </span>
+                    <span class="media-title">${media.title}</span>
+                    <span class="nb-likes" >
+                    <span class="likes-count">${media.likes}</span>
+                        <button class="wish-btn" tabindex="-1" aria-pressed="false" >
+                        <i class="fa-regular fa-heart" data-id="${media.id}" aria-label="Activer le like pour ce media"  tabindex="0" ></i>
+                        </button>
+                    </span>
                 </div>
             </div>`;
         } else if (media.video) {
             mediaTemplate = `
             <div class="media">
                 <article class="media-card">
-                    <a href="#" class="lightbox-trigger" role="link" aria-label="video ${media.title}, vue réduite" data-media-url="./assets/PhotosVideos/${photographerFirstName}/${media.video}" data-type="video">
-                        <video class="video-thumbnail" tabindex="-1">
+                    <a href="#" class="lightbox-trigger" title="video ${media.title}, vue réduite" 
+                    data-media-url="./assets/PhotosVideos/${photographerFirstName}/${media.video}" data-type="video">
+                        <video class="video-thumbnail" tabindex="-1" alt"video intitulée ${media.title}">
                             <source src="./assets/PhotosVideos/${photographerFirstName}/${media.video}" type="video/mp4">
-                            Votre navigateur peut ne pas supporter ce media vidéo.
                         </video>
                     </a>
                 </article>
                 <div class="media-text">
                     <span class="media-title">${media.title}</span>
-                <span class="nb-likes" >
-                    <span class="likes-count" tabindex="0" aria-label="Nombre de likes ${media.likes}">${media.likes}</span>
-                     <button class="wish-btn" aria-label="Liker ce media" tabindex="-1" aria-pressed="false" >
-                    <i class="fa-regular fa-heart" data-id="${media.id}" aria-label="Activer le like pour ce media"  tabindex="0" ></i>
-                    </button>
-                </span>
+                    <span class="nb-likes" >
+                    <span class="likes-count" aria-label="Nombre de likes ${media.likes}">${media.likes}</span>
+                        <button class="wish-btn" tabindex="-1" aria-pressed="false" >
+                        <i class="fa-regular fa-heart" data-id="${media.id}" aria-label="Activer le like pour ce media"  tabindex="0" ></i>
+                        </button>
+                    </span>
                 </div>
             </div>`;
         }

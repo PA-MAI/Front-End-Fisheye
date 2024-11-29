@@ -162,11 +162,11 @@ class ContactFormModal {
         this.modalWrapper.innerHTML = `
             <div class="modal-content">
                 <header>
-                    <div class="header-modal" aria-label="Contactez-moi ${this.photographerName}">
+                    <div class="header-modal" aria-label="pour contacter ${this.photographerName} remplir ce formulaire" tabindex="0">
                         <div><h2 class="contact-text">Contactez-moi</h2>
                         <span class="Contact-name">${this.photographerName}</span>
                         </div>
-                        <img src="assets/icons/close.svg" aria-label="ferme le formulaire de contact" class="close-modal-icon" tabindex="0">
+                        <img src="assets/icons/close.svg" aria-label="ferme le formulaire de contact" class="close-modal-icon" tabindex="0  ">
                     </div>
                 </header>
                 <form id="contactForm">
@@ -186,7 +186,7 @@ class ContactFormModal {
                         <label for="message">Votre message</label>
                         <textarea class="text-control" id="message" name="message" aria-label="votre message" placeholder="votre message" aria-required="true"></textarea>
                     </div>
-                    <button type="submit" class="contact_button" aria-label="Envoyer par mail" tabindex="0">Envoyer</button>
+                    <button type="submit" class="contactModal_button" aria-label="Envoyer par mail" tabindex="0">Envoyer</button>
                 </form>
             </div>
         `;
@@ -282,7 +282,7 @@ class ContactFormModal {
                 //console.log("Formulaire soumis.");
                 this.validForm.runForm(event);
 
-                // variables pour le mailto
+                // variables pour la console mailto
                 const firstname = form.firstname.value;
                 const lastname = form.lastname.value;
                 const email = form.email.value;
@@ -294,11 +294,11 @@ class ContactFormModal {
 
                 // Ferme la modale après une soumission valide
                 if (this.isValidForm()) {
-                    // Construire l'URL mailto
-                    const mailtoLink = `mailto:destinataire@example.com?subject=Message de ${email},${firstname} ${lastname}&body=Bonjour ${this.photographerName}, voici mon message: ${message}, cordialement ${firstname} ${lastname} Contact : ${email}`;
 
-                    // Ouvre le client de messagerie
-                    window.location.href = mailtoLink;
+                    //optionnel: Construire l'URL mailto 
+                    // const mailtoLink = `mailto:destinataire@example.com?subject=Message de ${email},${firstname} ${lastname}&body=Bonjour ${this.photographerName}, voici mon message: ${message}, cordialement ${firstname} ${lastname} Contact : ${email}`;
+                    //window.location.href = mailtoLink;
+                    
                     console.log("Formulaire validé avec succès, mailto ouvert !", email, firstname, lastname, message);
 
                     // Ferme la modale après soumission
@@ -328,7 +328,7 @@ class ContactFormModal {
          // Retire l'écouteur pour le piège de focus
          document.removeEventListener("keydown", this.trapFocus.bind(this));
 
-        // Optionnel : Restaurer le focus sur le bouton qui a ouvert la modale
+        // Restaure le focus sur le bouton qui a ouvert la modale
         const openButton = document.querySelector(".open-modal-button");
         if (openButton) {
         openButton.focus();

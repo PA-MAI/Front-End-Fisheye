@@ -10,7 +10,7 @@ class appProfilPhotographer {
     // Main method to fetch and display photographer profiles
     async main() {
         try {
-            console.log('Fetching profiles...');
+            //console.log('Fetching profiles...');
 
             // Fetching profiles from the API
             const { photographers } = await this.profilApi.getProfilAndMedia();
