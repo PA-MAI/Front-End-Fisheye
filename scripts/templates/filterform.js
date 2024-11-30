@@ -131,9 +131,7 @@ class FilterForm {
                     <span class="media-title">${media.title}</span>
                     <span class="nb-likes" >
                     <span class="likes-count">${media.likes}</span>
-                        <button class="wish-btn" tabindex="-1" aria-pressed="false" >
-                        <i class="fa-regular fa-heart" data-id="${media.id}" aria-label="Activer le like pour ce media"  tabindex="0" ></i>
-                        </button>
+                        <i role="button" class="fa-regular fa-heart wish-btn" data-id="${media.id}" aria-pressed="false" aria-label="Activer le like pour ce media"  tabindex="0" ></i>
                     </span>
                 </div>
             </div>`;
@@ -152,9 +150,7 @@ class FilterForm {
                     <span class="media-title">${media.title}</span>
                     <span class="nb-likes" >
                     <span class="likes-count" aria-label="Nombre de likes ${media.likes}">${media.likes}</span>
-                        <button class="wish-btn" tabindex="-1" aria-pressed="false" >
-                        <i class="fa-regular fa-heart" data-id="${media.id}" aria-label="Activer le like pour ce media"  tabindex="0" ></i>
-                        </button>
+                        <i role="button" class="fa-regular fa-heart wish-btn" data-id="${media.id}" aria-pressed="false" aria-label="Activer le like pour ce media"  tabindex="0" ></i>
                     </span>
                 </div>
             </div>`;

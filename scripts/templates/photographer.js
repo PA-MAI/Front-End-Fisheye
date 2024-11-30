@@ -9,7 +9,7 @@ class photographerCardTemplate {
 
         const CardTemplate = `
             <article class="card" role="figure" aria-label="carte du photographer">
-                <a role  class="card-profil" title="vue du profil de ${this._pcard.name} tabindex="0" aria-label=" aller sur le profile de ${this._pcard.name} de ${this._pcard.city}, ${this._pcard.country} son slogan: ${this._pcard.tagline}"
+                <a class="card-profil" title="vue du profil de ${this._pcard.name} tabindex="0" aria-label=" aller sur le profile de ${this._pcard.name} de ${this._pcard.city}, ${this._pcard.country} son slogan: ${this._pcard.tagline}"
                    href="photographer.html?id=${this._pcard.id}" >
                     <img class="card-portrait" alt="Profile of ${this._pcard.name}, ."
                          src="./assets/photographers/${this._pcard.portrait}" alt="image du photographe ${this._pcard.name}">
@@ -81,9 +81,9 @@ class photographerCardTemplate {
                 <span class="media-title">${media.title}</span>
                 <span class="nb-likes" >
                 <span class="likes-count">${media.likes}</span>
-                    <button class="wish-btn" tabindex="-1" aria-pressed="false" >
-                    <i class="fa-regular fa-heart" data-id="${media.id}" aria-label="Activer le like pour ce media"  tabindex="0" ></i>
-                    </button>
+                    
+                    <i role="button" class="fa-regular fa-heart wish-btn" data-id="${media.id}" aria-pressed="false" aria-label="Activer le like pour ce media"  tabindex="0" ></i>
+                    
                 </span>
             </div>
         </div>`;
@@ -102,9 +102,9 @@ class photographerCardTemplate {
                 <span class="media-title">${media.title}</span>
                 <span class="nb-likes" >
                 <span class="likes-count" aria-label="Nombre de likes ${media.likes}">${media.likes}</span>
-                    <button class="wish-btn" tabindex="-1" aria-pressed="false">
-                    <i class="fa-regular fa-heart" data-id="${media.id}" aria-label="Activer le like pour ce media"  tabindex="0" ></i>
-                    </button>
+                    <!--<button class="wish-btn" tabindex="-1" aria-pressed="false"> -->
+                    <i role="button" class="fa-regular fa-heart wish-btn" data-id="${media.id}" aria-pressed="false" aria-label="Activer le like pour ce media"  tabindex="0" ></i>
+                    <!--</button>-->
                 </span>
             </div>
         </div>`;

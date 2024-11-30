@@ -138,7 +138,7 @@ class Lightbox {
 
          // Activer le piège à focus
         const lightboxFocusTrap = new LightboxFocusTrap(lightboxWrapper);
-        //console.log(lightboxFocusTrap )
+        //console.log("voir lightboxFocusTrap", lightboxFocusTrap )
 
         // **Forcer le focus initial sur .lightbox-center**
         setTimeout(() => {
@@ -271,7 +271,7 @@ class Lightbox {
         // Supprimer tous les écouteurs liés à .lightbox-center
         const lightboxCenter = this.modal.querySelector('.lightbox-center');
         if (lightboxCenter) {
-            lightboxCenter.removeEventListener('keydown');
+            lightboxCenter.removeEventListener('keydown',this.handleKeydown);
         }
     
         // Rediriger le focus vers le déclencheur d'ouverture
@@ -303,13 +303,13 @@ class LightboxFocusTrap {
                     event.preventDefault();
                     this.lastFocusableElement.focus();
                 }
-            } //else {
-                // Si Tab normal et focus sur le dernier élément
-               // if (document.activeElement === this.lastFocusableElement) {
-                //    event.preventDefault();
-                //    this.firstFocusableElement.focus();
-               // }
-          //  }
+            } else {
+                //Si Tab normal et focus sur le dernier élément
+               if (document.activeElement === this.lastFocusableElement) {
+                    event.preventDefault();
+                    this.firstFocusableElement.focus();
+                }
+            }
         } else if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
             // Empêche les flèches de perturber le piège à focus
             event.stopPropagation();
@@ -318,7 +318,7 @@ class LightboxFocusTrap {
     }
     updateFocusables() {
         this.focusableElements = this.lightboxWrapper.querySelectorAll(
-            'button, [tabindex]:not([tabindex="-1"], a, input, select, textarea)'
+            'button, [tabindex]:not([tabindex="-1"])'
         );
         this.firstFocusableElement = this.focusableElements[0];
         this.lastFocusableElement = this.focusableElements[this.focusableElements.length - 1];
