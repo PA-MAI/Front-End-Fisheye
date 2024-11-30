@@ -162,11 +162,11 @@ class ContactFormModal {
         this.modalWrapper.innerHTML = `
             <div class="modal-content">
                 <header>
-                    <div class="header-modal" aria-label="pour contacter ${this.photographerName} remplir ce formulaire" tabindex="0">
+                    <div class="header-modal" role="dialog" aria-label="pour contacter ${this.photographerName} remplir ce formulaire" tabindex="0">
                         <div><h2 class="contact-text">Contactez-moi</h2>
                         <span class="Contact-name">${this.photographerName}</span>
                         </div>
-                        <img src="assets/icons/close.svg" aria-label="ferme le formulaire de contact" class="close-modal-icon" tabindex="0  ">
+                        <img src="assets/icons/close.svg" aria-label="ferme le formulaire de contact" class="close-modal-icon" role="button" tabindex="0  ">
                     </div>
                 </header>
                 <form id="contactForm">

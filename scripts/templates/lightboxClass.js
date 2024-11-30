@@ -81,7 +81,7 @@ class Lightbox {
                 <i class="fa-sharp fa-solid fa-chevron-left lightbox-prev" aria-label="media précédent" role="button" tabindex="0"></i>
                 <span class="lightbox-anchor" aria-hidden="true"></span> 
             </div>
-            <div class="lightbox-center" aria-label="vue agrandie du media ${title}"role="dialog" tabindex="0" >
+            <div class="lightbox-center" aria-label="vue agrandie du media ${title}" role="dialog" tabindex="0" >
                 <div class="player">
                     <img src="${mediaUrl}" alt="${title}">
                     <div class="lightbox-text" aria-hidden="true">
@@ -90,7 +90,7 @@ class Lightbox {
                 </div>
             </div>
             <div class="lightbox-right">
-                <img type="button" src="assets/icons/closelight.svg" aria-label="Fermer la modale" class="lightbox-close-btn" tabindex="0">
+                <img role="button" src="assets/icons/closelight.svg" aria-label="Fermer la modale" class="lightbox-close-btn" tabindex="0">
                 <i class="fa-sharp fa-solid fa-chevron-right lightbox-next" aria-label="media suivante" role="button" tabindex="0"></i>
                 <span class="lightbox-anchor" aria-hidden="true"></span> 
             </div>
@@ -112,7 +112,7 @@ class Lightbox {
                 </div>
             </div>
             <div class="lightbox-right">
-                <img src="assets/icons/closelight.svg" aria-label="Close dialog" class="lightbox-close-btn" tabindex="0">
+                <img role="button" src="assets/icons/closelight.svg" aria-label="ferme la lightbox" class="lightbox-close-btn" tabindex="0">
                 <i class="fa-sharp fa-solid fa-chevron-right lightbox-next" aria-label="media suivant" role="button" tabindex="0"></i>
                 <span class="lightbox-anchor" aria-hidden="true"></span> 
             </div>
@@ -204,8 +204,8 @@ class Lightbox {
                     event.stopPropagation(); // Empêche la propagation
 
                     const direction = event.key === 'ArrowLeft' ? -1 : 1;
-                    
                     this.navigateMedia(direction); // Naviguer dans la direction appropriée
+
                 } else if (event.key === 'Escape') {
                     event.preventDefault();
                     event.stopPropagation();
@@ -217,14 +217,14 @@ class Lightbox {
         
             // Gérer la navigation clavier sur les chevrons
             prevButton.addEventListener('keydown', (event) => {
-               if (event.key === 'Enter' || event.key === ' ' || event.key === 'ArrowLeft') {
+               if (event.key === 'Enter' || event.key === ' ' ) {
                   event.preventDefault();
                   this.handlePrev();
                }
             });
         
             nextButton.addEventListener('keydown', (event) => {
-                if (event.key === 'Enter' || event.key === ' ' || event.key === 'ArrowRight') {
+                if (event.key === 'Enter' || event.key === ' ' ) {
                 event.preventDefault();
                 this.handleNext();
                 }
@@ -279,6 +279,7 @@ class Lightbox {
         if (openTrigger) {
             openTrigger.focus();
         }
+        debugger
     }
 }
 class LightboxFocusTrap {

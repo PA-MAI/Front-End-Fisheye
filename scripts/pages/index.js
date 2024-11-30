@@ -7,11 +7,11 @@ class appProfilPhotographer {
         this.profilApi = new ProfilApiPhotographer('./data/photographers.json');
     }
 
+    
     // Main method to fetch and display photographer profiles
     async main() {
-        try {
-            //console.log('Fetching profiles...');
-
+        if (document.querySelector('.photographer_section')) {
+            try {
             // Fetching profiles from the API
             const { photographers } = await this.profilApi.getProfilAndMedia();
             console.log('Fetched profiles:', photographers);
@@ -28,9 +28,10 @@ class appProfilPhotographer {
                 // Appending the created photographer card to the wrapper
                 this.$profilApiWrapper.appendChild(template.createPhotographerCard());
             });
-        } catch (error) {
+            } catch (error) {
             // Logging any errors that occur during the fetch process
-         console.error('Failed to fetch profiles', error);
+            console.error('Failed to fetch profiles', error);
+            }
         }
     }
 }
@@ -58,49 +59,57 @@ class appPagePhotographer {
     }
 
 
-    // Méthode principale pour afficher les détails du photographe et ses médias
+    // Main method to display photographer details and their media
     async main() {
         try {
             const { photographers, media } = await this.pageApi.getProfilAndMedia();
 
-            // récupère la query string de l'URL
-            const photographerIdFromUrl = window.location.search; 
-
-            // extrait l'ID de l'URL
-            const photographerId = new URLSearchParams(photographerIdFromUrl).get('id'); 
-            console.log ("photographerId",photographerId)
-            
-
-            //Recherche le photographe correspondant à l'ID dans l'URL
-            const photographer = photographers.find(m => m.id == photographerId); 
-            console.log ("Photographer",photographer)
-            
-          // Vérifie si le photographe a été trouvé et récupère son nom
-
-            if (photographer) {
-                // Créer une nouvelle page pour ce photographe
-                const pageTemplate = new photographerCardTemplate(photographer);
-                console.log("Le nom du photographe est :", photographer.name);
-
-                // Filtrer les médias du photographe
-                const photographerMedia = media.filter(m => m.photographerId === photographer.id);
-                // Injecter la page créée dans la section photograph-header
-                this.$pageApiWrapper.appendChild(pageTemplate.createPhotographerPage(photographerMedia));
-            } else {
-                console.error('no choice of Photographer  ');
+            // Validate returned data
+            if (!photographers || !Array.isArray(photographers)) {
+                throw new Error('Invalid photographers data');
             }
+            if (!media || !Array.isArray(media)) {
+                throw new Error('Invalid media data');
+            }
+
+            // Retrieve and validate photographer ID from the URL
+            const photographerIdFromUrl = window.location.search;
+            const photographerId = new URLSearchParams(photographerIdFromUrl).get('id');
+            console.log('Photographer ID:', photographerId);
+            if (!photographerId) {
+                console.error('Photographer ID is missing.');
+                return;
+            }
+
+            // Find the photographer
+            const photographer = photographers.find(m => m.id == photographerId);
+            if (!photographer) {
+                console.error('No photographer found for ID:', photographerId);
+                return;
+            }
+
+            // Create the page
+            const pageTemplate = new photographerCardTemplate(photographer);
+            const photographerMedia = media.filter(m => m.photographerId === photographer.id);
+
+            // Generate and inject DOM element
+            const pageElement = pageTemplate.createPhotographerPage(photographerMedia);
+
+            // Append the content to the page
+            if (!this.$pageApiWrapper || !(this.$pageApiWrapper instanceof Node)) {
+                throw new Error('$pageApiWrapper is not a valid DOM Node.');
+            }
+            //this.$pageApiWrapper.appendChild(pageElement);
+            console.log('Photographer page successfully created.');
         } catch (error) {
-            console.error('Failed to fetch profiles and media', error);
-       }
+            console.error('Failed to fetch profiles and media:', error);
+        }
     }
-   
- }
+}
 
 
-
-// Écouter l'événement DOMContentLoaded pour s'assurer que le DOM est prêt
+// Event listener for DOMContentLoaded to ensure the DOM is ready
 document.addEventListener("DOMContentLoaded", () => {
     const appPageInstance = new appPagePhotographer();
     appPageInstance.main();
 });
-

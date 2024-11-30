@@ -141,7 +141,7 @@ class FilterForm {
                 <article class="media-card">
                     <a href="#" class="lightbox-trigger" title="video ${media.title}, vue réduite" 
                     data-media-url="./assets/PhotosVideos/${photographerFirstName}/${media.video}" data-type="video">
-                        <video class="video-thumbnail" tabindex="-1" alt"video intitulée ${media.title}">
+                        <video class="video-thumbnail" tabindex="-1" >
                             <source src="./assets/PhotosVideos/${photographerFirstName}/${media.video}" type="video/mp4">
                         </video>
                     </a>
@@ -149,7 +149,7 @@ class FilterForm {
                 <div class="media-text">
                     <span class="media-title">${media.title}</span>
                     <span class="nb-likes" >
-                    <span class="likes-count" aria-label="Nombre de likes ${media.likes}">${media.likes}</span>
+                    <span class="likes-count">${media.likes}</span>
                         <i role="button" class="fa-regular fa-heart wish-btn" data-id="${media.id}" aria-pressed="false" aria-label="Activer le like pour ce media"  tabindex="0" ></i>
                     </span>
                 </div>

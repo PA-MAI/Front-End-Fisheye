@@ -9,10 +9,10 @@ class photographerCardTemplate {
 
         const CardTemplate = `
             <article class="card" role="figure" aria-label="carte du photographer">
-                <a class="card-profil" title="vue du profil de ${this._pcard.name} tabindex="0" aria-label=" aller sur le profile de ${this._pcard.name} de ${this._pcard.city}, ${this._pcard.country} son slogan: ${this._pcard.tagline}"
+                <a class="card-profil" title="vue du profil de ${this._pcard.name}" tabindex="0" aria-label="aller sur le profile de ${this._pcard.name} de ${this._pcard.city}, ${this._pcard.country} son slogan: ${this._pcard.tagline}"
                    href="photographer.html?id=${this._pcard.id}" >
                     <img class="card-portrait" alt="Profile of ${this._pcard.name}, ."
-                         src="./assets/photographers/${this._pcard.portrait}" alt="image du photographe ${this._pcard.name}">
+                         src="./assets/photographers/${this._pcard.portrait}">
                     <h2 class="card-name">${this._pcard.name}</h2>
                 </a>
                 <div class="card-text" aria-label="origin">
@@ -31,12 +31,12 @@ class photographerCardTemplate {
     createPhotographerPage(photographerMedia) {
         const photographHeader = document.querySelector('.photograph-header');
         photographHeader.innerHTML = '';
-
-            // Créer une instance de lightbox
-        const lightboxInstance = new Lightbox(); 
+    
+        // Créer une instance de lightbox
+        const lightboxInstance = new Lightbox();
         const contactModal = new ContactFormModal(this._pcard.name);
-
-        // header du photographe injecté
+    
+        // Header du photographe injecté
         const pagePhotographerTemplate = `
             <article class="page__card" role="figure" aria-label="carte du photographer">
                 <div class="page__card--text" aria-label="origine">
@@ -48,141 +48,153 @@ class photographerCardTemplate {
                     <button class="contact_button" tabindex="0">Contactez-moi</button>
                 </div>
                 <div class="page__card--profil" title="Vue du profil de ${this._pcard.name}" role="title">
-                    <img class="page__card--portrait" tabindex="0" alt="portrait du photographe ${this._pcard.name}, son slogan: ${this._pcard.tagline}."
+                    <img class="page__card--portrait" tabindex="0" alt="portrait du photographe ${this._pcard.name}."
                         src="./assets/photographers/${this._pcard.portrait}">
                 </div>
             </article>
         `;
-        
+    
         photographHeader.insertAdjacentHTML('beforeend', pagePhotographerTemplate);
-
+    
         const mediaWrapper = document.querySelector('.photographer-media');
-        mediaWrapper.innerHTML = '';
-        // acces au chemin des medias
+        if (!mediaWrapper) {
+            console.error('mediaWrapper is not found in the DOM.');
+            return; // Stop if mediaWrapper is not found
+        }
+    
+        mediaWrapper.innerHTML = ''; // Clear existing media
+    
+        // Accès au chemin des médias
         const photographerFirstName = this._pcard.name.split(" ")[0];
-
         let totalLikes = photographerMedia.reduce((sum, media) => sum + media.likes, 0);
         console.log("Total Likes au chargement : ", totalLikes);
-
-        //médias injectés du photographe
+    
+        // Médias injectés du photographe
         photographerMedia.forEach((media) => {
             let mediaTemplate = '';
-
+    
             if (media.image) {
                 mediaTemplate = `
-                <div class="media">
-                <article class="media-card">
-                    <a href="#" class="lightbox-trigger" title="image ${media.title}, vue réduite" 
-                        data-media-id="${media.id}" data-media-url="./assets/PhotosVideos/${photographerFirstName}/${media.image}" data-type="image" >
-                        <img src="./assets/PhotosVideos/${photographerFirstName}/${media.image}" alt="lien vers le média ${media.title} de ${this._pcard.name}">
-                    </a>
-                </article>
-                <div class="media-text">
-                <span class="media-title">${media.title}</span>
-                <span class="nb-likes" >
-                <span class="likes-count">${media.likes}</span>
-                    
-                    <i role="button" class="fa-regular fa-heart wish-btn" data-id="${media.id}" aria-pressed="false" aria-label="Activer le like pour ce media"  tabindex="0" ></i>
-                    
-                </span>
-            </div>
-        </div>`;
-    } else if (media.video) {
-        mediaTemplate = `
-        <div class="media">
-            <article class="media-card">
-                <a href="#" class="lightbox-trigger" title="video ${media.title}, vue réduite" 
-                data-media-id="${media.id}" data-media-url="./assets/PhotosVideos/${photographerFirstName}/${media.video}" data-type="video" src="./assets/PhotosVideos/${photographerFirstName}/${media.video}" type="video/mp4">
-                    <video class="video-thumbnail" tabindex="-1" alt"video intitulée ${media.title}">
-                        <source src="./assets/PhotosVideos/${photographerFirstName}/${media.video}" type="video/mp4">
-                    </video>
-                </a>
-            </article>
-            <div class="media-text">
-                <span class="media-title">${media.title}</span>
-                <span class="nb-likes" >
-                <span class="likes-count" aria-label="Nombre de likes ${media.likes}">${media.likes}</span>
-                    <!--<button class="wish-btn" tabindex="-1" aria-pressed="false"> -->
-                    <i role="button" class="fa-regular fa-heart wish-btn" data-id="${media.id}" aria-pressed="false" aria-label="Activer le like pour ce media"  tabindex="0" ></i>
-                    <!--</button>-->
-                </span>
-            </div>
-        </div>`;
-    }
-
+                    <div class="media">
+                        <article class="media-card">
+                            <a href="#" class="lightbox-trigger" 
+                               title="image ${media.title}, vue réduite" 
+                               data-media-id="${media.id}" 
+                               data-media-url="./assets/PhotosVideos/${photographerFirstName}/${media.image}" 
+                               data-type="image">
+                                <img src="./assets/PhotosVideos/${photographerFirstName}/${media.image}" 
+                                     alt="lien vers le média ${media.title} de ${this._pcard.name}">
+                            </a>
+                        </article>
+                        <div class="media-text">
+                            <span class="media-title">${media.title}</span>
+                            <span class="nb-likes">
+                                <span class="likes-count">${media.likes}</span>
+                                <i role="button" class="fa-regular fa-heart wish-btn" 
+                                   data-id="${media.id}" 
+                                   aria-pressed="false" 
+                                   aria-label="Activer le like pour ce média" 
+                                   tabindex="0"></i>
+                            </span>
+                        </div>
+                    </div>`;
+            } else if (media.video) {
+                mediaTemplate = `
+                    <div class="media">
+                        <article class="media-card">
+                            <a href="#" class="lightbox-trigger" 
+                               title="vidéo ${media.title}, vue réduite" 
+                               data-media-id="${media.id}" 
+                               data-media-url="./assets/PhotosVideos/${photographerFirstName}/${media.video}" 
+                               data-type="video">
+                                <video class="video-thumbnail" tabindex="-1" 
+                                       aria-label="vidéo intitulée ${media.title}">
+                                    <source src="./assets/PhotosVideos/${photographerFirstName}/${media.video}" type="video/mp4">
+                                </video>
+                            </a>
+                        </article>
+                        <div class="media-text">
+                            <span class="media-title">${media.title}</span>
+                            <span class="nb-likes">
+                                <span class="likes-count">${media.likes}</span>
+                                <i role="button" class="fa-regular fa-heart wish-btn" 
+                                   data-id="${media.id}" 
+                                   aria-pressed="false" 
+                                   aria-label="Activer le like pour ce média" 
+                                   tabindex="0"></i>
+                            </span>
+                        </div>
+                    </div>`;
+            }
+    
             mediaWrapper.insertAdjacentHTML('beforeend', mediaTemplate);
-
-            // Attacher l'événement de la lightbox avec toutes les informations
-            document.querySelector('.photographer-media').addEventListener('click', async (event) => {
-                const mediaElement = event.target.closest('.lightbox-trigger');
-                if (!mediaElement) return; // Si le clic n'est pas sur une lightbox-trigger, ignorer
-            
-                event.preventDefault();
-            
-                // Récupérer les données de l'élément cliqué
-                const mediaId = parseInt(mediaElement.dataset.mediaId, 10);
-                if (isNaN(mediaId)) {
-                    console.error("Erreur : mediaId n'est pas un nombre valide.", mediaElement.dataset.mediaId);
-                    return;
-                }
-            
-                // Charger les données du photographe
-                this.photographerId = this._pcard.id;
-                this.pageApi = new ProfilApiPhotographer('./data/photographers.json');
-                const mediaData = await this.pageApi.getDefaultMedia(this.photographerId);
-            
-                // Trouver l'index du média
-                const currentIndex = mediaData.findIndex(media => media.id === mediaId);
-                if (currentIndex === -1) {
-                    console.error("Erreur : média non trouvé dans mediaData. mediaId:", mediaId);
-                    return;
-                }
-            
-                // Afficher la lightbox avec les bonnes données
-                lightboxInstance.displayLightbox(
-                    mediaData[currentIndex],
-                    this.photographerId,
-                    this._pcard.name.split(" ")[0], // Prénom du photographe
-                    mediaData
-        );
-    });
-
-  });
+        });
     
-
-        // injection et mise à jour de la div du total des likes
+        // Attacher l'événement de la lightbox une seule fois après avoir injecté tous les médias
+        mediaWrapper.addEventListener('click', async (event) => {
+            const mediaElement = event.target.closest('.lightbox-trigger');
+            if (!mediaElement) return; // Si le clic n'est pas sur une lightbox-trigger, ignorer
+    
+            event.preventDefault();
+    
+            // Récupérer les données de l'élément cliqué
+            const mediaId = parseInt(mediaElement.dataset.mediaId, 10);
+            if (isNaN(mediaId)) {
+                console.error("Erreur : mediaId n'est pas un nombre valide.", mediaElement.dataset.mediaId);
+                return;
+            }
+    
+            // Charger les données du photographe
+            this.photographerId = this._pcard.id;
+            this.pageApi = new ProfilApiPhotographer('./data/photographers.json');
+            const mediaData = await this.pageApi.getDefaultMedia(this.photographerId);
+    
+            // Trouver l'index du média
+            const currentIndex = mediaData.findIndex(media => media.id === mediaId);
+            if (currentIndex === -1) {
+                console.error("Erreur : média non trouvé dans mediaData. mediaId:", mediaId);
+                return;
+            }
+    
+            // Afficher la lightbox avec les bonnes données
+            lightboxInstance.displayLightbox(
+                mediaData[currentIndex],
+                this.photographerId,
+                this._pcard.name.split(" ")[0], // Prénom du photographe
+                mediaData
+            );
+        });
+    
+        // Injection et mise à jour de la div du total des likes
         const photographLike = document.querySelector('.like-result');
-        photographLike.innerHTML = 
-      
-       `<div class="result-likes" tabindex="0" aria-label="Le photographe a reçu ${totalLikes} likes, son tarif ${this._pcard.price} euros par jour." aria-live="polite">
-        <!-- Bloc du resultat des likes -->
-            <div aria-hidden="true">
-            <span class="wish-count">${totalLikes}</span>
-            <span >
-            <i class="fa-solid fa-heart heart" aria-hidden="true" tabindex="-1" ></i>
-            </span>
-            </div>
-
-        <!-- Tarif -->
-            <div tabindex="-1" aria-hidden="true">
-                <span>${this._pcard.price} €/jour</span>
-            </div>
-        </div>
-       `;
+        if (photographLike) {
+            photographLike.innerHTML = `
+                <div class="result-likes">
+                    <div>
+                        <span class="wish-count">${totalLikes}</span>
+                        <i class="fa-solid fa-heart heart"></i>
+                    </div>
+                    <div>
+                        <span>${this._pcard.price} €/jour</span>
+                    </div>
+                </div>`;
+        }
     
-
         const wishlistSubject = new WishlistSubject();
         const wishlistCounter = new WhishListCounter(totalLikes);
         wishlistSubject.subscribe(wishlistCounter);
-
+    
+        // Gérer les likes
         this.handlelikeButton(photographerMedia, wishlistSubject, wishlistCounter);
-
-        // ouverture de la modale de contact
+    
+        // Ouvrir la modale de contact
         const contactButton = document.querySelector('.contact_button');
-        contactButton.addEventListener('click', () => {
-            contactModal.openModal(); 
-        });
-    };
+        if (contactButton) {
+            contactButton.addEventListener('click', () => {
+                contactModal.openModal();
+            });
+        }
+    }
 
     handlelikeButton(photographerMedia, wishlistSubject, wishlistCounter) {
         // Sélectionner tous les icônes de cœur
