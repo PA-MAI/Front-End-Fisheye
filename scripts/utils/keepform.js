@@ -18,7 +18,7 @@ class keepForm {
         formDataHistory.push(formData);
 
         // Affiche les données dans la console
-       // console.log("Données du formulaire sauvegardées :", formData);
+       // console.warn("Données du formulaire sauvegardées :", formData);
     }
 
     // Fonction pour afficher l'historique

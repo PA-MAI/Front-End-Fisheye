@@ -77,7 +77,7 @@ class appPagePhotographer {
             const photographerId = new URLSearchParams(photographerIdFromUrl).get('id');
             console.log('Photographer ID:', photographerId);
             if (!photographerId) {
-                console.error('Photographer ID is missing.');
+                console.warn('PhotographerId stay your choice');
                 return;
             }
 

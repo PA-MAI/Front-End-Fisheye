@@ -6,6 +6,8 @@ class Lightbox {
         this.mediaData = [];
         this.mediaIds = []; 
         this.photographerFirstName = "";
+        this.focusTrap = null;
+        
 
 
     }
@@ -13,10 +15,10 @@ class Lightbox {
     async displayLightbox(mediaData, photographerId, photographerFirstName, sortedMedia = null) {
         
     
-        // Utiliser `sortedMedia` si disponible, sinon charger les médias par défaut
+        // promesse: Utilise `sortedMedia` si disponible, sinon charge les médias par défaut
         this.mediaData = sortedMedia || await this.pageApi.getDefaultMedia(photographerId);
 
-        // Vérifier que `mediaData` est bien un tableau, sinon assigner un tableau vide
+        // Vérifie que `mediaData` est bien un tableau, sinon assigne un tableau vide
         if (!Array.isArray(this.mediaData)) {
             console.error("mediaData n'est pas un tableau. Assignation d'un tableau vide.");
             
@@ -41,15 +43,13 @@ class Lightbox {
         this.loadMedia(this.currentIndex);
 
         // Afficher la lightbox
-
         this.modal.style.display = "flex";
 
-        
         // Configurer les écouteurs de navigation
         this.setupNavigationListeners();
         this.setupCloseListeners();
     }
-
+    // fait remonter les informations du média
     loadMedia(index) {
         const mediaId = this.mediaIds[index];
         
@@ -67,10 +67,11 @@ class Lightbox {
         // Mettre à jour la lightbox avec le titre et le prix
         this.updateLightboxContent(mediaUrl, mediaType, currentMedia.title, currentMedia.price);
     }
-
+    // injecte la lightbox
     updateLightboxContent(mediaUrl, mediaType, title, price) {
         const lightboxWrapper = this.modal.querySelector(".lightbox_modal");
-        lightboxWrapper.innerHTML = ''; // Efface le contenu précédent
+        // Efface le contenu précédent
+        lightboxWrapper.innerHTML = ''; 
 
         let lightboxTemplate = '';
         if (mediaType === 'image') {
@@ -81,7 +82,7 @@ class Lightbox {
                 <i class="fa-sharp fa-solid fa-chevron-left lightbox-prev" aria-label="media précédent" role="button" tabindex="0"></i>
                 <span class="lightbox-anchor" aria-hidden="true"></span> 
             </div>
-            <div class="lightbox-center" aria-label="vue agrandie du media ${title}" role="dialog" tabindex="0" >
+            <div class="lightbox-center" aria-label="vue rapprochée du media ${title}" role="dialog" tabindex="0" >
                 <div class="player">
                     <img src="${mediaUrl}" alt="${title}">
                     <div class="lightbox-text" aria-hidden="true">
@@ -103,7 +104,7 @@ class Lightbox {
                 <i class="fa-sharp fa-solid fa-chevron-left lightbox-prev" aria-label="media précédent" role="button" tabindex="0"></i>
                 <span class="lightbox-anchor" aria-hidden="true"></span> 
             </div>
-            <div class="lightbox-center" aria-label="vue agrandie du media ${title}" role="dialog" tabindex="0" >
+            <div class="lightbox-center" aria-label="vue rapprochée du media ${title}" role="dialog" tabindex="0" >
                 <div class="player">
                     <video class="lightbox-video" src="${mediaUrl}" alt="Vidéo ${title}" controls=""></video>
                     <div class="lightbox-text" aria-hidden="true">
@@ -123,22 +124,13 @@ class Lightbox {
         // Insertion du contenu...
         lightboxWrapper.insertAdjacentHTML('beforeend', lightboxTemplate);
 
-        // Réactivation du narrateur pour le titre après un délai
-        //const lightboxTitle = this.modal.querySelector('#lightboxTitle');
-        //setTimeout(() => {
-        //if (lightboxTitle) {
-        //lightboxTitle.setAttribute('aria-hidden', 'false'); // Rendre le titre lisible
-        //}
-        //}, 500); // Délai pour éviter les sauts
-
-
         // Mettre à jour les écouteurs de navigation à chaque chargement de contenu
         this.setupCloseListeners();
         this.setupNavigationListeners();
 
          // Activer le piège à focus
         const lightboxFocusTrap = new LightboxFocusTrap(lightboxWrapper);
-        //console.log("voir lightboxFocusTrap", lightboxFocusTrap )
+        //console.warn("vision de lightboxFocusTrap", lightboxFocusTrap )
 
         // **Forcer le focus initial sur .lightbox-center**
         setTimeout(() => {
@@ -146,13 +138,11 @@ class Lightbox {
             if (lightboxCenter) {
                 lightboxCenter.focus();
             }
-        }, 0); // Délai minimal pour attendre le rendu DOM
+        }, 300); // Délai minimal pour attendre le rendu DOM
     
         }
 
-    
-
-        // Attacher l'événement de fermeture de la lightbox avec fermeture click ou clavier
+        // Attache l'événement de fermeture de la lightbox avec fermeture click ou clavier
         setupCloseListeners() {
             const closeButton = this.modal.querySelector('.lightbox-close-btn');
             if (closeButton) {
@@ -172,98 +162,119 @@ class Lightbox {
             });
         }
 
-
+        //Attache les autres evenements clavier et click sur la lightbox
         setupNavigationListeners() {
-            // Sélection des boutons de navigation
+            // Sélection des éléments nécessaires
             const prevButton = this.modal.querySelector('.lightbox-prev');
             const nextButton = this.modal.querySelector('.lightbox-next');
-            const lightboxCenter = this.modal.querySelector('.lightbox-center'); // Conteneur principal
+            const lightboxCenter = this.modal.querySelector('.lightbox-center');
         
-            // Vérification de l'existence des boutons de navigation
+            // Vérification de la présence des éléments
             if (!prevButton || !nextButton || !lightboxCenter) {
                 console.error("Erreur : un élément requis est introuvable pour la navigation.");
                 return;
             }
         
-            // Supprimer les anciens écouteurs d'événements pour éviter les doublons
+            // Supprimer les anciens écouteurs pour éviter les doublons
             prevButton.removeEventListener('click', this.handlePrev);
             nextButton.removeEventListener('click', this.handleNext);
+            lightboxCenter.removeEventListener('keydown', this.handleKeydown);
         
-            // Définir les fonctions de navigation
+            // Attacher les gestionnaires de navigation
             this.handlePrev = () => this.navigateMedia(-1);
             this.handleNext = () => this.navigateMedia(1);
-        
-            // Ajouter les événements `click` pour les chevrons
-            prevButton.addEventListener('click', this.handlePrev);
-            nextButton.addEventListener('click', this.handleNext);
-        
-            // Gérer les événements `keydown` uniquement dans `.lightbox-center`
-            const handleKeydown = (event) => {
-                if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
-                    event.preventDefault(); // Empêche le comportement par défaut
-                    event.stopPropagation(); // Empêche la propagation
 
-                    const direction = event.key === 'ArrowLeft' ? -1 : 1;
-                    this.navigateMedia(direction); // Naviguer dans la direction appropriée
+
+
+
+        // Gestion des événements click et clavier sur les chevrons
+        let isProcessing = false;
+        
+        const handlePrevButton = (event) => {
+            if (isProcessing) return; // Ignore si déjà en traitement
+            isProcessing = true;
+            event.preventDefault();
+            event.stopPropagation();
+        
+            if (event.type === 'click' || (event.type === 'keydown' && (event.key === 'Enter' || event.key === ' '))) {
+                console.log(`Navigation déclenchée: direction -1, index actuel : ${this.currentIndex}`);
+                this.handlePrev();
+            }
+            setTimeout(() => { isProcessing = false; }, 200); // Délai pour empêcher une double exécution
+        };
+        
+        const handleNextButton = (event) => {
+            if (isProcessing) return; // Ignore si déjà en traitement
+            isProcessing = true;
+        
+            event.preventDefault();
+            event.stopPropagation();
+        
+            if (event.type === 'click' || (event.type === 'keydown' && (event.key === 'Enter' || event.key === ' '))) {
+                console.log(`Navigation déclenchée: direction +1, index actuel : ${this.currentIndex}`);
+                this.handleNext();
+            }
+        
+            setTimeout(() => { isProcessing = false; }, 200); // Délai pour empêcher une double exécution
+        };
+        // Ajout des écouteurs pour les boutons
+        nextButton.addEventListener('click', handleNextButton,  { once: true });
+        nextButton.addEventListener('keydown', handleNextButton, { once: true });
+        prevButton.addEventListener('click', handlePrevButton, { once: true });
+        prevButton.addEventListener('keydown', handlePrevButton, { once: true });
+        
+
+
+            // Gestionnaire d'événements clavier sur 
+            this.handleKeydown = (event) => {
+                if (event.key === 'ArrowLeft') {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    this.handlePrev(); 
+                    
+
+                } else if (event.key === 'ArrowRight') {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    this.handleNext(); 
+
 
                 } else if (event.key === 'Escape') {
                     event.preventDefault();
                     event.stopPropagation();
-                    this.closeLightbox(); // Fermer la modale
+                    this.closeLightbox(); // Fermer la lightbox
                 }
             };
-            // Ajouter l'écouteur global pour la navigation clavier
-            lightboxCenter.addEventListener('keydown', handleKeydown);
+            lightboxCenter.addEventListener('keydown', this.handleKeydown);
+
+        }
+
+        navigateMedia(direction) {
+            if (!this.mediaIds || this.mediaIds.length === 0) {
+                console.error("mediaIds est vide ou non défini.");
+                return;
+            }
         
-            // Gérer la navigation clavier sur les chevrons
-            prevButton.addEventListener('keydown', (event) => {
-               if (event.key === 'Enter' || event.key === ' ' ) {
-                  event.preventDefault();
-                  this.handlePrev();
-               }
-            });
+            // Mettre à jour l'index actuel pour qu'il boucle correctement
+            this.currentIndex = (this.currentIndex + direction + this.mediaIds.length) % this.mediaIds.length;
+            console.log(`Navigation déclenchée : direction ${direction}, index actuel : ${this.currentIndex}`);
         
-            nextButton.addEventListener('keydown', (event) => {
-                if (event.key === 'Enter' || event.key === ' ' ) {
-                event.preventDefault();
-                this.handleNext();
-                }
-          });
+            // Charger le média correspondant au nouvel index
+            this.loadMedia(this.currentIndex);
+        
+            // Synchroniser le piège à focus
+            const lightboxFocusTrap = new LightboxFocusTrap(this.modal.querySelector('.lightbox_modal'));
+            lightboxFocusTrap.updateFocusables();
+        
+            // Forcer le focus sur le conteneur principal après navigation
+            const lightboxCenter = this.modal.querySelector('.lightbox-center');
+            if (lightboxCenter) {
+                lightboxCenter.focus();
+            }
+            
+            console.log("Focus avant navigation :", document.activeElement);
+            
         }
-
-    navigateMedia(direction) {
-        if (!this.mediaIds || this.mediaIds.length === 0) {
-            console.error("mediaIds est vide ou non défini.");
-            return;
-        }
-
-        // Mettre à jour l'index actuel pour qu'il boucle correctement
-        this.currentIndex = (this.currentIndex + direction + this.mediaIds.length) % this.mediaIds.length;
-
-        // Charger le média correspondant au nouvel index
-        this.loadMedia(this.currentIndex);
-        // Gérer le focus en fonction de la direction
-        //const prevButton = this.modal.querySelector('.lightbox-center')
-        //('.lightbox-prev');
-        //const nextButton = this.modal.querySelector('.lightbox-center')
-        //('.lightbox-next');
-
-        // Synchroniser le piège à focus
-        const lightboxFocusTrap = new LightboxFocusTrap(this.modal.querySelector('.lightbox_modal'));
-        lightboxFocusTrap.updateFocusables();
-
-        // Forcer le focus sur le conteneur principal après navigation
-        const lightboxCenter = this.modal.querySelector('.lightbox-center');
-        if (lightboxCenter) {
-        lightboxCenter.focus();
-        }
-
-      //  if (direction === -1 && prevButton) {
-      //  prevButton.focus(); // Rester sur le bouton "Précédent"
-      //  } else if (direction === 1 && nextButton) {
-      //  nextButton.focus(); // Rester sur le bouton "Suivant"
-    //}
-    }
 
     closeLightbox() {
         this.modal.style.display = "none";
@@ -279,21 +290,29 @@ class Lightbox {
         if (openTrigger) {
             openTrigger.focus();
         }
-        debugger
+        // Permet de réinitialiser les écouteurs si nécessaire
+        this.listenersSetup = false; 
+
+        
     }
 }
+//piege à focus pour la lightbox
 class LightboxFocusTrap {
 
     constructor(lightboxWrapper) {
         this.lightboxWrapper = lightboxWrapper;
         this.focusableElements = lightboxWrapper.querySelectorAll(
-           'button, [tabindex]:not([tabindex="-1"], img, i, div)'
+           'button, [tabindex]:not([tabindex="-1"])'
         );
         this.firstFocusableElement = this.focusableElements[0];
         this.lastFocusableElement = this.focusableElements[this.focusableElements.length - 1];
+        if (this.focusableElements.length === 0) {
+            console.error("Aucun élément focusable trouvé dans la lightbox !");
+        }
 
         // Ajoute l'écouteur d'événements
         document.addEventListener("keydown", this.trapFocus.bind(this));
+        
     }
 
     trapFocus(event) {
@@ -321,9 +340,15 @@ class LightboxFocusTrap {
         this.focusableElements = this.lightboxWrapper.querySelectorAll(
             'button, [tabindex]:not([tabindex="-1"])'
         );
+        if (!this.firstFocusableElement || !this.lastFocusableElement) {
+            console.error("Focusable elements incorrects. Vérifie le DOM de la lightbox.");
+            return;
+        }
         this.firstFocusableElement = this.focusableElements[0];
         this.lastFocusableElement = this.focusableElements[this.focusableElements.length - 1];
+        //console.log("first",firstFocusableElement)
+        //console.log("last",lastFocusableElement)
     }
 }
-debugger
+
 window.lightboxInstance = new Lightbox();

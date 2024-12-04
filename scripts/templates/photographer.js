@@ -2,17 +2,15 @@ class photographerCardTemplate {
     constructor(pcard) {
         this._pcard = pcard;
     }
-    //cartes des photographes injectées
+    //cartes des photographes injectées sur l'index
     createPhotographerCard() {
         const $wrapper = document.createElement('div');
         $wrapper.classList.add('photographer_section-wrapper');
 
         const CardTemplate = `
             <article class="card" role="figure" aria-label="carte du photographer">
-                <a class="card-profil" title="vue du profil de ${this._pcard.name}" tabindex="0" aria-label="aller sur le profile de ${this._pcard.name} de ${this._pcard.city}, ${this._pcard.country} son slogan: ${this._pcard.tagline}"
-                   href="photographer.html?id=${this._pcard.id}" >
-                    <img class="card-portrait" alt="Profile of ${this._pcard.name}, ."
-                         src="./assets/photographers/${this._pcard.portrait}">
+                <a class="card-profil" title="vue du profil de ${this._pcard.name}" href="photographer.html?id=${this._pcard.id}" >
+                    <img class="card-portrait" alt="" src="./assets/photographers/${this._pcard.portrait}">
                     <h2 class="card-name">${this._pcard.name}</h2>
                 </a>
                 <div class="card-text" aria-label="origin">
@@ -32,7 +30,7 @@ class photographerCardTemplate {
         const photographHeader = document.querySelector('.photograph-header');
         photographHeader.innerHTML = '';
     
-        // Créer une instance de lightbox
+        // Instancie la lightbox
         const lightboxInstance = new Lightbox();
         const contactModal = new ContactFormModal(this._pcard.name);
     
@@ -48,7 +46,7 @@ class photographerCardTemplate {
                     <button class="contact_button" tabindex="0">Contactez-moi</button>
                 </div>
                 <div class="page__card--profil" title="Vue du profil de ${this._pcard.name}" role="title">
-                    <img class="page__card--portrait" tabindex="0" alt="portrait du photographe ${this._pcard.name}."
+                    <img class="page__card--portrait" alt="portrait de ${this._pcard.name}"
                         src="./assets/photographers/${this._pcard.portrait}">
                 </div>
             </article>
@@ -57,12 +55,14 @@ class photographerCardTemplate {
         photographHeader.insertAdjacentHTML('beforeend', pagePhotographerTemplate);
     
         const mediaWrapper = document.querySelector('.photographer-media');
+
+        // Stop if mediaWrapper is not found
         if (!mediaWrapper) {
             console.error('mediaWrapper is not found in the DOM.');
-            return; // Stop if mediaWrapper is not found
+            return; 
         }
-    
-        mediaWrapper.innerHTML = ''; // Clear existing media
+        // Clear existing media
+        mediaWrapper.innerHTML = ''; 
     
         // Accès au chemin des médias
         const photographerFirstName = this._pcard.name.split(" ")[0];
@@ -107,8 +107,7 @@ class photographerCardTemplate {
                                data-media-id="${media.id}" 
                                data-media-url="./assets/PhotosVideos/${photographerFirstName}/${media.video}" 
                                data-type="video">
-                                <video class="video-thumbnail" tabindex="-1" 
-                                       aria-label="vidéo intitulée ${media.title}">
+                                <video class="video-thumbnail" tabindex="-1">
                                     <source src="./assets/PhotosVideos/${photographerFirstName}/${media.video}" type="video/mp4">
                                 </video>
                             </a>
@@ -130,18 +129,19 @@ class photographerCardTemplate {
             mediaWrapper.insertAdjacentHTML('beforeend', mediaTemplate);
         });
     
-        // Attacher l'événement de la lightbox une seule fois après avoir injecté tous les médias
+        // Attache l'événement de la lightbox une seule fois après avoir injecté tous les médias
         mediaWrapper.addEventListener('click', async (event) => {
             const mediaElement = event.target.closest('.lightbox-trigger');
             if (!mediaElement) return; // Si le clic n'est pas sur une lightbox-trigger, ignorer
-    
+
             event.preventDefault();
     
             // Récupérer les données de l'élément cliqué
             const mediaId = parseInt(mediaElement.dataset.mediaId, 10);
+            console.log("mediaID",mediaId)
             if (isNaN(mediaId)) {
-                console.error("Erreur : mediaId n'est pas un nombre valide.", mediaElement.dataset.mediaId);
-                return;
+                console.warn(" The value of MediaID is NaN because it is only used for the unfiltered page.", mediaElement.dataset.mediaId);
+              return;
             }
     
             // Charger les données du photographe
@@ -152,7 +152,7 @@ class photographerCardTemplate {
             // Trouver l'index du média
             const currentIndex = mediaData.findIndex(media => media.id === mediaId);
             if (currentIndex === -1) {
-                console.error("Erreur : média non trouvé dans mediaData. mediaId:", mediaId);
+                console.error("Error: Media not found in mediaData. mediaId:", mediaId);
                 return;
             }
     
@@ -160,7 +160,8 @@ class photographerCardTemplate {
             lightboxInstance.displayLightbox(
                 mediaData[currentIndex],
                 this.photographerId,
-                this._pcard.name.split(" ")[0], // Prénom du photographe
+                // Prénom du photographe
+                this._pcard.name.split(" ")[0], 
                 mediaData
             );
         });
@@ -171,7 +172,7 @@ class photographerCardTemplate {
             photographLike.innerHTML = `
                 <div class="result-likes">
                     <div>
-                        <span class="wish-count">${totalLikes}</span>
+                        <span class="wish-count" tabindex="0" Aria-label="Nombre total de likes ${totalLikes}">${totalLikes}</span>
                         <i class="fa-solid fa-heart heart"></i>
                     </div>
                     <div>
@@ -179,15 +180,15 @@ class photographerCardTemplate {
                     </div>
                 </div>`;
         }
-    
+        //instancie la wishlist
         const wishlistSubject = new WishlistSubject();
         const wishlistCounter = new WhishListCounter(totalLikes);
         wishlistSubject.subscribe(wishlistCounter);
     
-        // Gérer les likes
+        // Gére les likes
         this.handlelikeButton(photographerMedia, wishlistSubject, wishlistCounter);
     
-        // Ouvrir la modale de contact
+        // Ouvre la modale de contact
         const contactButton = document.querySelector('.contact_button');
         if (contactButton) {
             contactButton.addEventListener('click', () => {
@@ -195,7 +196,7 @@ class photographerCardTemplate {
             });
         }
     }
-
+    //methode pour les likes
     handlelikeButton(photographerMedia, wishlistSubject, wishlistCounter) {
         // Sélectionner tous les icônes de cœur
         document.querySelectorAll('.fa-heart').forEach(icon => {
@@ -206,18 +207,19 @@ class photographerCardTemplate {
             } else {
                 // Ajouter tabindex pour tous les autres cœurs
                 icon.setAttribute('tabindex', '0');
-                icon.setAttribute('role', 'button'); // Optionnel pour une meilleure accessibilité
-                icon.setAttribute('aria-pressed', 'false'); // Attribut ARIA pour indiquer l'état
+                icon.setAttribute('role', 'button'); 
+                // Attribut ARIA pour indiquer l'état
+                icon.setAttribute('aria-pressed', 'false'); 
             }
     
-            // Ajouter un gestionnaire pour le clic
+            // Gestionnaire pour le clic
             icon.addEventListener('click', (event) => {
                 this._toggleLike(event, photographerMedia, wishlistCounter);
             });
     
-            // Ajouter un gestionnaire pour la touche Entrée ou Espace
+            // Gestionnaire pour la touche Entrée ou Espace
             icon.addEventListener('keydown', (event) => {
-                if (event.key === 'Enter' || event.key === ' ') { // Vérifie Entrée ou Espace
+                if (event.key === 'Enter' || event.key === ' ') { 
                     event.preventDefault(); // Empêche le défilement pour Espace
                     this._toggleLike(event, photographerMedia, wishlistCounter);
                 }
@@ -225,7 +227,7 @@ class photographerCardTemplate {
         });
     }
 
-    // Nouvelle méthode privée pour gérer le toggle du like
+    // méthode pour gérer le toggle du like
     _toggleLike(event, photographerMedia, wishlistCounter) {
         const mediaId = event.target.getAttribute('data-id');
         const media = photographerMedia.find(m => m.id == mediaId);
@@ -236,13 +238,17 @@ class photographerCardTemplate {
             event.target.classList.replace('fa-solid', 'fa-regular');
             media.likes -= 1;
             wishlistCounter.update('DEC');
-            event.target.setAttribute('aria-pressed', 'false'); // Mise à jour ARIA
+            // Mise à jour ARIA
+            event.target.setAttribute('aria-pressed', 'false'); 
+            event.target.setAttribute('aria-label', 'like supprimé'); 
         } else {
             event.target.classList.add('liked');
             event.target.classList.replace('fa-regular', 'fa-solid');
             media.likes += 1;
             wishlistCounter.update('INC');
-            event.target.setAttribute('aria-pressed', 'true'); // Mise à jour ARIA
+            // Mise à jour ARIA
+            event.target.setAttribute('aria-pressed', 'true'); 
+            event.target.setAttribute('aria-label', 'like ajouté');
         }
     
         likesElement.textContent = media.likes;
