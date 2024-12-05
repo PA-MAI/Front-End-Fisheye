@@ -1,27 +1,27 @@
+// Design Pattern: **Memento Pattern**
+
 let formDataHistory = [];
 
 class keepForm {
     keepFormData(contactForm) {
         const formData = {};
 
-        // Récupère tous les champs d'entrée (input, textarea)
+        // Get all input fields (input, textarea)
         const inputs = contactForm.querySelectorAll("input, textarea");
 
-        // Itère sur chaque champ pour collecter les valeurs
+        // Iterates over each field to collect the values
         inputs.forEach((input) => {
-            if (input.name) { // S'assure que le champ a un nom valide
+            if (input.name) { 
                 formData[input.name] = input.value;
             }
         });
 
-        // Ajoute les données collectées à l'historique
+        // Adds the collected data to the history
         formDataHistory.push(formData);
-
-        // Affiche les données dans la console
        // console.warn("Données du formulaire sauvegardées :", formData);
     }
 
-    // Fonction pour afficher l'historique
+    // show history
     getFormDataHistory() {
         return formDataHistory;
     }

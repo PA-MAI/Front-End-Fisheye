@@ -3,40 +3,43 @@ class ErrorFunctions {
     displayError(input, message) {
         let spanErrorMessage = input.parentElement.querySelector(".errorMessage");
         if (!spanErrorMessage) {
-            // Si non, crée un nouveau span pour afficher l'erreur
+            // If not, create a new span to display the error
             spanErrorMessage = document.createElement("span");
             spanErrorMessage.className = "errorMessage";
             spanErrorMessage.setAttribute("role", "alert");
             spanErrorMessage.setAttribute("aria-invalid", "true");
             input.parentElement.appendChild(spanErrorMessage);
             
-        // Crée un ID unique pour le span
+        // Create a unique ID for the span
         const errorId = `error-${input.name}`;
         spanErrorMessage.id = errorId;
 
-        // Lier le champ d'entrée au message d'erreur
+        // Link the input field to the error message
         input.setAttribute("aria-describedby", errorId);
 
         input.parentElement.appendChild(spanErrorMessage);
-        //console.log("Création d'un message d'erreur pour :", input.name);
+        //console.warn("maintenance : error for :", input.name);
         }
-        // Mettre à jour le contenu du message d'erreur
+       // Update the error message content
         spanErrorMessage.innerText = message;
         input.classList.add("errorStyle");
-        //console.log("Message d'erreur affiché :", message);
+        //console.warn("maintenance : display error message :", message);
     }
 
     deleteError(input) {
         const spanErrorMessage = input.parentElement.querySelector(".errorMessage");
         if (spanErrorMessage) {
             spanErrorMessage.remove();
-            // Supprime l'attribut aria-describedby du champ
+            // Remove the aria-describedby attribute from the field
             input.removeAttribute("aria-describedby");
             input.classList.remove("errorStyle");
-            //console.log("Message d'erreur supprimé pour :", input.name);
+            //console.warn(" maintenance deleting error Message for :", input.name);
         }
     }
 }
+
+// Design Pattern: **Observer Pattern**
+// The other validation functions here, such as validFirst, validLast, validEmail, etc.
 class ValidForm {
     constructor(form) {
         this.form = form;
@@ -100,7 +103,7 @@ class ValidForm {
             }
 
             this.errorFunctions.deleteError(input); 
-            //console.log(`${input.name} champ validé avec succès.`);
+            //console.warn(`${input.name} champ validé avec succès.`);
         } catch (error) {
             this.errorFunctions.displayError(input, error.message); 
             console.log(`Erreur détectée pour ${input.name} : ${error.message}`);
@@ -112,28 +115,28 @@ class ValidForm {
         const form = event.target;
         let isValid = true;
     
-        // Créer une instance pour garder l'historique des données
+        // Create an instance to keep track of form data history
         const keepFormInstance = new keepForm();
         
-        // Sauvegarder les données du formulaire avant la validation
+        // Save form data before validation
         keepFormInstance.keepFormData(form);
         
-        // Nettoyer les erreurs existantes
+        // Clear existing errors
         form.querySelectorAll(".errorMessage").forEach(error => error.remove());
         form.querySelectorAll(".errorStyle").forEach(input => input.classList.remove("errorStyle"));
     
-        // Fonction de validation générique
+        // Generic validation function
         const validateField = (field, validateFn) => {
             try {
-                validateFn(field);  // Exécuter la fonction de validation
-                this.errorFunctions.deleteError(field);  // Supprimer l'erreur
+                validateFn(field);  
+                this.errorFunctions.deleteError(field);  
             } catch (error) {
-                this.errorFunctions.displayError(field, error.message);  // Afficher l'erreur
+                this.errorFunctions.displayError(field, error.message);  
                 isValid = false;
             }
         };
     
-        // Validation des champs
+        // Validate fields
         validateField(form.firstname, this.validFirst.bind(this));
         validateField(form.lastname, this.validLast.bind(this));
         validateField(form.email, this.validEmail.bind(this));
@@ -149,16 +152,16 @@ class ContactFormModal {
     constructor(photographerName) {
         this.modalWrapper = document.getElementById('contact_modal');
         this.photographerName = photographerName;
-        this.form = null; // Initialisé plus tard
-        this.validForm = null; // Initialisé plus tard
-        this.errorFunctions = null;//Initialisé plus tard
-        this.keepFormInstance = new keepForm(); // Instanciation de keepForm
+        this.form = null; 
+        this.validForm = null; 
+        this.errorFunctions = null;
+        this.keepFormInstance = new keepForm(); // Instanciate keepForm
         
         
     }
 
     openModal() {
-        // Injecte le contenu HTML du formulaire dans la modale
+        // Injects the HTML content of the form into the modal
         this.modalWrapper.innerHTML = `
             <div class="modal-content">
                 <header>
@@ -193,7 +196,7 @@ class ContactFormModal {
         
          
 
-        // Gérer le focus
+        // Handle focus
         const focusableElements = this.modalWrapper.querySelectorAll(
         'button, textarea, input[type="text"], input[type="email"], [tabindex]:not([tabindex="-1"])'
         );
@@ -202,20 +205,20 @@ class ContactFormModal {
         focusableElements[0].focus();
         }
 
-        // Ajouter le piège de focus
+        // Add focus trap
         document.addEventListener("keydown", this.trapFocus.bind(this));
     
 
-        // Assure que `this.form` fait bien référence au formulaire injecté
+        // Ensures `this.form` references the injected form
         this.form = document.getElementById("contactForm");
         console.log('Formulaire injecté et écouteurs ajoutés.');
 
-        // Initialise les fonctions de validation et d'erreurs après l'injection
+        // Initialize validation and error functions after injection
         this.errorFunctions = new ErrorFunctions();
         this.validForm = new ValidForm(this.form, this.errorFunctions);
 
 
-        // Affiche la modale
+        // Show the modal
         this.modalWrapper.style.display = "flex";   
 
 
@@ -237,15 +240,15 @@ class ContactFormModal {
         }
     });
 
-        // Ajoute un écouteur pour intercepter les tabulations
+        // Add event listeners to close the modal with click or keyboard
         document.addEventListener("keydown", this.trapFocus.bind(this));
         if (focusableElements.length > 0) {
-            focusableElements[0].focus(); // Met le focus sur le premier élément
+            focusableElements[0].focus(); // focus on first élément
         }
     }
-
+    // Design Pattern: **Observer Pattern**
     trapFocus(event) {
-        if (event.key !== "Tab") return; // Ignorer si ce n'est pas "Tab"
+        if (event.key !== "Tab") return; // Ignore if not "Tab"
     
         const focusableElements = this.modalWrapper.querySelectorAll(
             'button, textarea, input[type="text"], input[type="submit"], [tabindex]:not([tabindex="-1"])'
@@ -254,12 +257,12 @@ class ContactFormModal {
         const firstElement = focusableElements[0];
         const lastElement = focusableElements[focusableElements.length - 1];
     
-        // Si "Shift + Tab" et on est sur le premier élément
+        // If "Shift + Tab" and on the first element
         if (event.shiftKey && document.activeElement === firstElement) {
             event.preventDefault();
             lastElement.focus();
         }
-        // Si "Tab" et on est sur le dernier élément
+        // If "Tab" and on the last element
         else if (!event.shiftKey && document.activeElement === lastElement) {
             event.preventDefault();
             firstElement.focus();
@@ -268,40 +271,39 @@ class ContactFormModal {
 
     addEventListeners() {
         const form = this.form;
-        
+
 
         if (form) {
             form.addEventListener("input", (event) => {
                 this.validForm.validForm(event);
-                // console.log("Input détecté :", event.target.name);
+                // console.log("Input detected:", event.target.name);
             });
 
             form.addEventListener("submit", (event) => {
-                // Empêche le comportement par défaut du formulaire
                 event.preventDefault(); 
-                //console.log("Formulaire soumis.");
+                //console.warn("Form submitted.");
                 this.validForm.runForm(event);
 
-                // variables pour la console mailto
+                // Variables for mailto console
                 const firstname = form.firstname.value;
                 const lastname = form.lastname.value;
                 const email = form.email.value;
                 const message = form.message.value;
 
-                // Sauvegarde les données dans keepForm (avant de valider ou envoyer l'email)
+                // Save form data in keepForm (before validating or sending email)
                 this.keepFormInstance.keepFormData(form);
                 console.log("Données sauvegardées dans keepForm :", this.keepFormInstance.getFormDataHistory());
 
-                // Ferme la modale après une soumission valide
+                // Close modal after successful submission
                 if (this.isValidForm()) {
 
-                    //optionnel: Construire l'URL mailto 
+                    //optional: Build the mailto URL
                     // const mailtoLink = `mailto:destinataire@example.com?subject=Message de ${email},${firstname} ${lastname}&body=Bonjour ${this.photographerName}, voici mon message: ${message}, cordialement ${firstname} ${lastname} Contact : ${email}`;
                     //window.location.href = mailtoLink;
                     
                     console.log("Formulaire validé avec succès, mailto ouvert !", email, firstname, lastname, message);
 
-                    // Ferme la modale après soumission
+                    // Close the modal after submission
                     this.closeModal();
                 }
             });
@@ -311,7 +313,7 @@ class ContactFormModal {
     }
     
     isValidForm() {
-        // Vérifie si le formulaire est valide avant de fermer la modale
+        // Check if form is valid before close modal 
         return !this.form.querySelector(".errorMessage");
 
     }
@@ -319,16 +321,16 @@ class ContactFormModal {
     closeModal() {
        
 
-        // Ferme la modale
+        // close modale
         this.modalWrapper.style.display = "none"; 
 
-        // Vide le contenu HTML de la modale
+        // Empty the HTML content of the modal
         this.modalWrapper.innerHTML = ""; 
 
-         // Retire l'écouteur pour le piège de focus
-         document.removeEventListener("keydown", this.trapFocus.bind(this));
+        // Removes the listener for the focus trap
+        document.removeEventListener("keydown", this.trapFocus.bind(this));
 
-        // Restaure le focus sur le bouton qui a ouvert la modale
+        // Restores focus to the button that opened the modal
         const openButton = document.querySelector(".open-modal-button");
         if (openButton) {
         openButton.focus();

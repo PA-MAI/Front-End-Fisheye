@@ -1,15 +1,17 @@
+// Design Pattern: Observer Pattern
+
 class WhishListCounter {
     constructor(initialCount = 0) {
         this._count = initialCount;
         this._$wishCount = document.querySelector('.wish-count'); 
         
-        // Vérification si l'élément existe
+        // Checking if the element exists
         if (!this._$wishCount) {
             console.error("L'élément .wish-count est introuvable !");
             return;
         }
         
-        // Initialiser le compteur dans le DOM
+        // Initialize the counter in the DOM
         this.updateDisplay();
     }
 
@@ -27,15 +29,15 @@ class WhishListCounter {
             throw new Error("Action inconnue");
         }
 
-        // Met à jour l'affichage dans le DOM
+        // update display in DOM
         this.updateDisplay();
     }
 
     updateDisplay() {
-        // Mettre à jour uniquement le texte du nombre de likes sans toucher à l'icône
-        const likesSpan = this._$wishCount.querySelector('span'); // Sélectionner uniquement le texte à l'intérieur
+        // Update only the text of the number of likes without touching the icon
+        const likesSpan = this._$wishCount.querySelector('span'); 
         if (!likesSpan) {
-           // console.error("L'élément <span> pour les likes est introuvable !");
+            //console.warn("The <span> element for likes was not found!");
             return;
         }
         likesSpan.textContent = this._count;

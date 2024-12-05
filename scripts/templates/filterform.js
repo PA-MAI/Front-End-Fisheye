@@ -1,16 +1,23 @@
+// Class definition for filtering and displaying media
+// Design Pattern: Observer Pattern & Factory Method Pattern
+
+
 class FilterForm {
     constructor(photographers, media) {
+        //init data for photographers and medias
         this.photographers = photographers;
         this.media = media;
+        // Sélection div for menu
         this.filterSelect = document.querySelector('.filter-select'); 
+        //init class and listeners
         this.init();
     }
-
+    // Initialization method
     init() {
         this.populateFilterOptions();
         this.filterSelect.addEventListener('change', this.handleFilterChange.bind(this));
     }
-
+    // Populate the filter options dynamically
     populateFilterOptions() {
         const options = [
             { value: 'title', text: 'Titre' },
@@ -18,7 +25,7 @@ class FilterForm {
             { value: 'date', text: 'Date' }
             
         ];
-
+        //options for menu 
         options.forEach(option => {
             const opt = document.createElement('option');
             opt.value = option.value;
@@ -26,11 +33,11 @@ class FilterForm {
             this.filterSelect.appendChild(opt);
         });
     }
-    
+    // Handle changes in the filter selection
     handleFilterChange() {
         const selectedValue = this.filterSelect.value;
         
-        // Obtient l'ID du photographe actuel dynamiquement en récupérant les éléments affichés sur la page
+        // Dynamic retrieval of photographer ID by the DOM
         const photographerName = document.querySelector('.page__card--name').textContent;
         const photographer = this.photographers.find(p => p.name === photographerName);
         
@@ -42,7 +49,7 @@ class FilterForm {
         const photographerId = photographer.id;
         const photographerMedia = this.media.filter(media => media.photographerId === photographerId);
     
-        // Trier les médias en fonction de la sélection
+        // filter medias by selection
         let sortedMedia = this.sortByTitle(photographerMedia);
         console.log(photographerMedia)
 
@@ -54,20 +61,20 @@ class FilterForm {
             sortedMedia = this.sortByLikes(photographerMedia);
         }
     
-        // Met à jour l'affichage des médias avec sortedMedia et passe `photographerId` pour la lightbox
+        // update display of medias with sortedMedia and give `photographerId` for lightbox
         this.updateMediaDisplay(sortedMedia, photographerId);
 
-        // Recalcule les likes totaux
+        // Recalculate total likes and manage subscriptions
         let totalLikes = sortedMedia.reduce((sum, media) => sum + media.likes, 0);
         const wishlistSubject = new WishlistSubject();
         const wishlistCounter = new WhishListCounter(totalLikes);
         wishlistSubject.subscribe(wishlistCounter);
 
-        // Re-applique les écouteurs d'événements pour les boutons de "like"
+        // Adding events for the "like" buttons
         const photographerInstance = new photographerCardTemplate(photographer);
         photographerInstance.handlelikeButton(sortedMedia, wishlistSubject, wishlistCounter);
     }
-    
+    // Sorting methods for media
     sortByTitle(media) {
         return media.sort((a, b) => a.title.localeCompare(b.title));
     }
@@ -79,40 +86,38 @@ class FilterForm {
         return media.sort((a, b) => new Date(b.date) - new Date(a.date));
     }
 
-    
-
+    // Update the media display dynamically
     updateMediaDisplay(sortedMedia, photographerId) {
         const mediaWrapper = document.querySelector('.photographer-media');
-        mediaWrapper.innerHTML = ''; // Effacer l'affichage actuel
-    
+        mediaWrapper.innerHTML = ''; 
+    // Added sorted media models
         sortedMedia.forEach(media => {
             const mediaTemplate = this.createMediaTemplate(media);
             mediaWrapper.insertAdjacentHTML('beforeend', mediaTemplate);
         });
     
-        // Configuration des déclencheurs pour ouvrir la lightbox avec les médias filtrés
+        // Setting up triggers to open lightbox with filtered media
         const mediaElements = document.querySelectorAll('.lightbox-trigger');
-
-
-       mediaElements.forEach((element, index) => {
+        mediaElements.forEach((element, index) => {
             element.addEventListener('click', (event) => {
             event.preventDefault();
             const photographerFirstName = this.photographers.find(p => p.id === photographerId).name.split(" ")[0];
-            // Passer `null` pour `sortedMedia` si nous utilisons les médias par défaut sans filtre
+            // Pass `null` for `sortedMedia` if we use default media without filter
             const mediaToPass = sortedMedia.length ? sortedMedia : null;
-            // Affiche la lightbox avec les médias triés
+            // Displays the lightbox with sorted media
              window.lightboxInstance.displayLightbox(sortedMedia[index], photographerId, photographerFirstName, mediaToPass);
             });
-         // Recalcule les focusables pour LightboxFocusTrap
+         // Recalculate focusables for LightboxFocusTrap
          const lightboxWrapper = document.querySelector('.lightbox_modal');
          const lightboxFocusTrap = new LightboxFocusTrap(lightboxWrapper);
+         // Explicit focus on .lightbox-center
          const lightboxCenter = lightboxWrapper.querySelector('.lightbox-center');
          if (lightboxCenter) {
-             lightboxCenter.focus(); // Focus explicite sur .lightbox-center
+             lightboxCenter.focus(); 
          }
      });
  }
-
+    // Create a template for media items (images/videos)
     createMediaTemplate(media) {
         const photographerFirstName = this.photographers.find(p => p.id === media.photographerId).name.split(" ")[0];
         
@@ -161,7 +166,7 @@ class FilterForm {
     
 }
 
-// Récupération des données du JSON
+// Fetch data from JSON file and initialize the FilterForm
 fetch('./data/photographers.json')
     .then(response => response.json())
     .then(data => {

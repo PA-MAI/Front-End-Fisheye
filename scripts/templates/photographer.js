@@ -1,8 +1,10 @@
+// Design Pattern: **Factory Pattern, Module pattern and Composite Pattern**
+
 class photographerCardTemplate {
     constructor(pcard) {
         this._pcard = pcard;
     }
-    //cartes des photographes injectées sur l'index
+    // Photographer cards injected on the homepage
     createPhotographerCard() {
         const $wrapper = document.createElement('div');
         $wrapper.classList.add('photographer_section-wrapper');
@@ -25,16 +27,16 @@ class photographerCardTemplate {
         return $wrapper;
     }
 
-    //page du photographe
+    // Photographer's page
     createPhotographerPage(photographerMedia) {
         const photographHeader = document.querySelector('.photograph-header');
         photographHeader.innerHTML = '';
     
-        // Instancie la lightbox
+        // Instantiate the lightbox
         const lightboxInstance = new Lightbox();
         const contactModal = new ContactFormModal(this._pcard.name);
     
-        // Header du photographe injecté
+        // Photographer header injected
         const pagePhotographerTemplate = `
             <article class="page__card" role="figure" aria-label="carte du photographer">
                 <div class="page__card--text" aria-label="origine">
@@ -64,12 +66,12 @@ class photographerCardTemplate {
         // Clear existing media
         mediaWrapper.innerHTML = ''; 
     
-        // Accès au chemin des médias
+        // Access media path
         const photographerFirstName = this._pcard.name.split(" ")[0];
         let totalLikes = photographerMedia.reduce((sum, media) => sum + media.likes, 0);
         console.log("Total Likes au chargement : ", totalLikes);
     
-        // Médias injectés du photographe
+        // Inject photographer's media
         photographerMedia.forEach((media) => {
             let mediaTemplate = '';
     
@@ -129,14 +131,14 @@ class photographerCardTemplate {
             mediaWrapper.insertAdjacentHTML('beforeend', mediaTemplate);
         });
     
-        // Attache l'événement de la lightbox une seule fois après avoir injecté tous les médias
+        // Attach the lightbox event once all media have been injected
         mediaWrapper.addEventListener('click', async (event) => {
             const mediaElement = event.target.closest('.lightbox-trigger');
-            if (!mediaElement) return; // Si le clic n'est pas sur une lightbox-trigger, ignorer
+            if (!mediaElement) return; // If the click is not on a lightbox-trigger, ignore
 
             event.preventDefault();
     
-            // Récupérer les données de l'élément cliqué
+            // Retrieve clicked element's data
             const mediaId = parseInt(mediaElement.dataset.mediaId, 10);
             console.log("mediaID",mediaId)
             if (isNaN(mediaId)) {
@@ -144,29 +146,29 @@ class photographerCardTemplate {
               return;
             }
     
-            // Charger les données du photographe
+            // Load photographer data
             this.photographerId = this._pcard.id;
             this.pageApi = new ProfilApiPhotographer('./data/photographers.json');
             const mediaData = await this.pageApi.getDefaultMedia(this.photographerId);
     
-            // Trouver l'index du média
+            // Find the media index
             const currentIndex = mediaData.findIndex(media => media.id === mediaId);
             if (currentIndex === -1) {
                 console.error("Error: Media not found in mediaData. mediaId:", mediaId);
                 return;
             }
     
-            // Afficher la lightbox avec les bonnes données
+             // Display the lightbox with correct data
             lightboxInstance.displayLightbox(
                 mediaData[currentIndex],
                 this.photographerId,
-                // Prénom du photographe
+                // Photographer's first name
                 this._pcard.name.split(" ")[0], 
                 mediaData
             );
         });
     
-        // Injection et mise à jour de la div du total des likes
+       // Inject and update total likes div
         const photographLike = document.querySelector('.like-result');
         if (photographLike) {
             photographLike.innerHTML = `
@@ -180,15 +182,18 @@ class photographerCardTemplate {
                     </div>
                 </div>`;
         }
-        //instancie la wishlist
+
+
+        //Design Pattern: **Observer Pattern **
+        //Instantiate the wishlist
         const wishlistSubject = new WishlistSubject();
         const wishlistCounter = new WhishListCounter(totalLikes);
         wishlistSubject.subscribe(wishlistCounter);
     
-        // Gére les likes
+        // Handle likes
         this.handlelikeButton(photographerMedia, wishlistSubject, wishlistCounter);
     
-        // Ouvre la modale de contact
+        // Open the contact modal
         const contactButton = document.querySelector('.contact_button');
         if (contactButton) {
             contactButton.addEventListener('click', () => {
@@ -196,28 +201,28 @@ class photographerCardTemplate {
             });
         }
     }
-    //methode pour les likes
+    // Like button handler
     handlelikeButton(photographerMedia, wishlistSubject, wishlistCounter) {
-        // Sélectionner tous les icônes de cœur
+        // Select all heart icons
         document.querySelectorAll('.fa-heart').forEach(icon => {
-            // Vérifier si l'icône est dans .result-likes
+            // Check if the icon is within .result-likes
             if (icon.closest('.result-likes')) {
-                // Ne pas ajouter tabindex ni rôle sur cet élément
+                // Don't add tabindex or role on this element
                 icon.setAttribute('tabindex', '-1'); 
             } else {
-                // Ajouter tabindex pour tous les autres cœurs
+                // Add tabindex for all other hearts
                 icon.setAttribute('tabindex', '0');
                 icon.setAttribute('role', 'button'); 
-                // Attribut ARIA pour indiquer l'état
+                // ARIA attribute to indicate state
                 icon.setAttribute('aria-pressed', 'false'); 
             }
     
-            // Gestionnaire pour le clic
+            // Click handler
             icon.addEventListener('click', (event) => {
                 this._toggleLike(event, photographerMedia, wishlistCounter);
             });
     
-            // Gestionnaire pour la touche Entrée ou Espace
+            //  Enter or Space handler
             icon.addEventListener('keydown', (event) => {
                 if (event.key === 'Enter' || event.key === ' ') { 
                     event.preventDefault(); // Empêche le défilement pour Espace
@@ -227,7 +232,7 @@ class photographerCardTemplate {
         });
     }
 
-    // méthode pour gérer le toggle du like
+    // Toggle of like handler
     _toggleLike(event, photographerMedia, wishlistCounter) {
         const mediaId = event.target.getAttribute('data-id');
         const media = photographerMedia.find(m => m.id == mediaId);
@@ -238,7 +243,7 @@ class photographerCardTemplate {
             event.target.classList.replace('fa-solid', 'fa-regular');
             media.likes -= 1;
             wishlistCounter.update('DEC');
-            // Mise à jour ARIA
+            // Update ARIA for delete like
             event.target.setAttribute('aria-pressed', 'false'); 
             event.target.setAttribute('aria-label', 'like supprimé'); 
         } else {
@@ -246,7 +251,7 @@ class photographerCardTemplate {
             event.target.classList.replace('fa-regular', 'fa-solid');
             media.likes += 1;
             wishlistCounter.update('INC');
-            // Mise à jour ARIA
+            // Update ARIA for add like
             event.target.setAttribute('aria-pressed', 'true'); 
             event.target.setAttribute('aria-label', 'like ajouté');
         }

@@ -1,36 +1,38 @@
 // Class definition for the application profile
+// Design Pattern: Singleton Pattern
+
+
 class appProfilPhotographer {
     constructor() {
-        // Selecting the container for the photographer profiles
+        // Sélection du conteneur pour les profils des photographes
         this.$profilApiWrapper = document.querySelector('.photographer_section');
-        // Creating an instance of the ProfilApi to fetch data from the JSON file
+        // Création d'une instance de ProfilApi pour récupérer les données du fichier JSON
         this.profilApi = new ProfilApiPhotographer('./data/photographers.json');
     }
 
-    
     // Main method to fetch and display photographer profiles
     async main() {
         if (document.querySelector('.photographer_section')) {
             try {
-            // Fetching profiles from the API
-            const { photographers } = await this.profilApi.getProfilAndMedia();
-            console.log('Fetched profiles:', photographers);
+                // Fetching profiles via the API
+                const { photographers } = await this.profilApi.getProfilAndMedia();
+                console.log('Fetched profiles:', photographers);
 
-            // Check if the fetched profiles are in the correct format
-            if (!Array.isArray(photographers)) {
-                throw new Error('Photographers is not an array');
-            }
+                // Check if the fetched profiles are in the correct format
+                if (!Array.isArray(photographers)) {
+                    throw new Error('Photographers is not an array');
+                }
 
-            // Iterating through each photographer profile
-            photographers.forEach((photographer) => {
-                // Creating a new photographer card template
-                const template = new photographerCardTemplate(photographer);
-                // Appending the created photographer card to the wrapper
-                this.$profilApiWrapper.appendChild(template.createPhotographerCard());
-            });
+                // Iterating through each photographer profile
+                photographers.forEach((photographer) => {
+                    // Creating a photographer card template
+                    const template = new photographerCardTemplate(photographer);
+                    // Appending the photographer card to the wrapper
+                    this.$profilApiWrapper.appendChild(template.createPhotographerCard());
+                });
             } catch (error) {
-            // Logging any errors that occur during the fetch process
-            console.error('Failed to fetch profiles', error);
+                // Logging any errors that occur during the fetch process
+                console.error('Failed to fetch profiles', error);
             }
         }
     }
@@ -44,20 +46,18 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-
-
+// Class definition for the photographer's detailed page
+// Design Pattern: Template Method Pattern
 
 class appPagePhotographer {
     constructor() {
-        // Sélection de la section où afficher les détails du photographe
+        // Select section where display photographer data
         this.$pageApiWrapper = document.querySelector('.photograph-header');
-        // Instance de l'API pour obtenir les profils et médias depuis le fichier JSON
+        // Instantiate API for profils and medias from file JSON
         this.pageApi = new ProfilApiPhotographer('./data/photographers.json');
-        // Sélection du conteneur pour les photos/médias
+        // Select Div for medias
         this.$mediaWrapper = document.querySelector('.photographer-media');
-
     }
-
 
     // Main method to display photographer details and their media
     async main() {
@@ -106,7 +106,6 @@ class appPagePhotographer {
         }
     }
 }
-
 
 // Event listener for DOMContentLoaded to ensure the DOM is ready
 document.addEventListener("DOMContentLoaded", () => {

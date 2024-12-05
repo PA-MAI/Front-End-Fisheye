@@ -1,3 +1,9 @@
+// Design Pattern: Singleton and Strategy Pattern
+// Explanation: La classe Api applique le modèle **Singleton** en assurant qu'une seule instance 
+// gère la logique de récupération des données depuis une URL donnée. La classe ProfilApiPhotographer 
+// étend cette classe et applique le **Strategy Pattern** pour gérer des actions spécifiques comme la 
+// récupération des données d'un photographe ou de ses médias.
+
 class Api {
     /**
      * Constructor for the Api class
