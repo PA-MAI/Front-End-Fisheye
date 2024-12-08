@@ -222,7 +222,7 @@ class ContactFormModal {
         this.modalWrapper.style.display = "flex";   
 
 
-        // Ajoute les écouteurs d'événements pour fermer la modale click ou clavier
+        // Adds event listeners to close the click or keyboard modal
         const closeModalIcon = this.modalWrapper.querySelector('.close-modal-icon');
         closeModalIcon.addEventListener('click', () => this.closeModal());
         this.addEventListeners();

@@ -4,9 +4,9 @@
 
 class appProfilPhotographer {
     constructor() {
-        // Sélection du conteneur pour les profils des photographes
+        // Container selection for photographer profiles
         this.$profilApiWrapper = document.querySelector('.photographer_section');
-        // Création d'une instance de ProfilApi pour récupérer les données du fichier JSON
+        // Creating a ProfilApi instance to retrieve data from the JSON file
         this.profilApi = new ProfilApiPhotographer('./data/photographers.json');
     }
 

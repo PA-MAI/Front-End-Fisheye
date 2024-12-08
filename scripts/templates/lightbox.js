@@ -197,7 +197,7 @@ class Lightbox {
                 event.stopPropagation();
             
                 if (event.type === 'click' || (event.type === 'keydown' && (event.key === 'Enter' || event.key === ' '))) {
-                    console.log(`Navigation déclenchée: direction -1, index actuel : ${this.currentIndex}`);
+                   // console.log(`Navigation déclenchée: direction -1, index actuel : ${this.currentIndex}`);
                     this.handlePrev();
                 }
                 setTimeout(() => { isProcessing = false; }, 200); // Delay to prevent double execution
@@ -211,7 +211,7 @@ class Lightbox {
                 event.stopPropagation();
             
                 if (event.type === 'click' || (event.type === 'keydown' && (event.key === 'Enter' || event.key === ' '))) {
-                    console.log(`Navigation déclenchée: direction +1, index actuel : ${this.currentIndex}`);
+                   // console.log(`Navigation déclenchée: direction +1, index actuel : ${this.currentIndex}`);
                     this.handleNext();
                 }
             
@@ -257,7 +257,7 @@ class Lightbox {
         
             // Update the current index so that it loops properly
             this.currentIndex = (this.currentIndex  + direction + this.mediaIds.length) % this.mediaIds.length;
-            console.log(`Navigation déclenchée : direction ${direction}, index actuel : ${this.currentIndex}`);
+            //console.log(`Navigation déclenchée : direction ${direction}, index actuel : ${this.currentIndex}`);
         
             // Load the media corresponding to the new index
             this.loadMedia(this.currentIndex);
@@ -272,7 +272,7 @@ class Lightbox {
                 lightboxCenter.focus();
             }
             
-            console.log("Focus avant navigation :", document.activeElement);
+            //console.log("Focus avant navigation :", document.activeElement);
             
         }
         // manages closing the lightbox
