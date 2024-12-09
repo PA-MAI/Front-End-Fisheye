@@ -439,8 +439,12 @@ form input {
     flex-direction: column;
     height: 513px;
     gap: 3%;
-    
     }
+    .page__card--text h1{
+        font-size: 44px;
+    }
+    
+    
     .photographer-media{
         display: flex;
         flex-direction: row;
